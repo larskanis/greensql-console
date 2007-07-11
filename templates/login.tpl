@@ -10,8 +10,12 @@
 <form method="POST">
 <table cellspacing=0 cellpadding=0 align="center">
 
+{if $demo }
+<tr><td colspan=2><strong>Demo User: admin<br/>Demo Pass: pwd</strong><br/><br/></td></tr>
+{/if}
+
 {if $msg }
-<tr><td colspan=2>{$msg}<p/></td></tr>
+<tr><td colspan=2>{$msg}<br/></td></tr>
 {/if }
 
 <tr><td valign="top" width="100">Username</td>
@@ -28,5 +32,4 @@
 </table>
 </form>
 
-</body>
-</html>
+{include file="footer.tpl"}
