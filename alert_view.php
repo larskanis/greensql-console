@@ -29,6 +29,19 @@ if ($_POST[action] == "approve" && $agroupid)
         $alert[status] = 1;
     }
 }
+#check if this query has bad format
+if (strstr($alert[pattern], "??") !== FALSE)
+{
+    $bad = 1;
+} else {
+    $bad = 0;
+}
+#if ($_POST[action] == "delete" && $agroupid && $bad == 1)
+#{
+#    delete_alert($agroupid);
+#    header("location: alert_list.php");
+#    exit;
+#}
 
 $dbs = get_databases();
 $smarty->assign("databases", $dbs);
@@ -39,6 +52,7 @@ $smarty->assign("AGROUP_proxyname", $alert[proxyname]);
 $smarty->assign("AGROUP_db_name", $alert[db_name]);
 $smarty->assign("AGROUP_pattern", $alert[pattern]);
 $smarty->assign("AGROUP_status", intval($alert[status]));
+$smarty->assign("AGROUP_bad", $bad);
 
 $alerts = get_raw_alerts($agroupid);
 $smarty->assign("alerts", $alerts);
