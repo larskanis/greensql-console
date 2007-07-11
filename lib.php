@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include 'config.php';
+include_once 'config.php';
 
 header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Mon, 26 jul 1997 05:00:00 GMT");
@@ -269,6 +269,16 @@ function get_raw_alerts($agroupid)
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
+        $row[reason] = str_replace("\n", "<br/>\n", $row[reason]);
+	if ($row[block] == 1)
+	{
+	    $row[block_str] = "<font color='red'>blocked</font>";
+	} else if ($row[block] == 0)
+	{
+	    $row[block_str] = "<font color='orange'>warning</font>";
+	} else {
+	    $row[block_str] = "unknown";
+	}
         $alerts[] = $row;
     }
     return $alerts;
@@ -304,6 +314,25 @@ function ignore_alert($agroupid)
 {
     $agroupid=intval($agroupid);
     $q = "UPDATE alert_group set status=2 WHERE agroupid=$agroupid";
+    $result = mysql_query($q);
+}
+
+function delete_alert($agroupid)
+{
+    $agroupid=intval($agroupid);
+    $q = "DELETE from alert_group WHERE agroupid=$agroupid";
+    $result = mysql_query($q);
+    $q = "DELETE from alert WHERE agroupid=$agroupid";
+    $result = mysql_query($q);
+}
+
+function truncate_alerts()
+{
+    $q = "truncate alert_group";
+    $result = mysql_query($q);
+    $q = "truncate alert";
+    $result = mysql_query($q);
+    $q = "truncate query";
     $result = mysql_query($q);
 }
 
