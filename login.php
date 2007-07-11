@@ -34,6 +34,7 @@ if ($_POST[login] && isset($_POST[user]) && isset($_POST[pass]))
 }
 
 $smarty->assign("Name","GreenSQL Login Page");
+$smarty->assign("demo",$demo_version);
 $error = "";
 
 $smarty->display('login.tpl');
