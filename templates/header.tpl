@@ -12,6 +12,7 @@
 <a href="alert_list.php?status=1">Approved Alerts</a>&nbsp;&nbsp;&nbsp;|
 <a href="log_view.php">View log</a>&nbsp;&nbsp;&nbsp;|
 <a href="user_edit.php">User Settings</a>&nbsp;&nbsp;&nbsp;|
+<a href="cleanall.php">Clean All</a>&nbsp;&nbsp;&nbsp;|
 </div>
 <div style="display:inline; align:right;"><a href="logout.php">Logout</a></div>
 <hr>
