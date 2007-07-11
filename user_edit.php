@@ -44,7 +44,11 @@ if ($_POST['submit'])
         $error .= "New passwords are different.<br/>\n";
     }
     $user[pwd] = $pass;
-    if (!$error)
+    if ($demo_version)
+    {
+        $msg = "You can not change passwords in demo version.";
+    }
+    else if (!$error)
     {
         $error = update_user($user);
 	if (!$error)

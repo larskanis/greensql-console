@@ -49,7 +49,12 @@ if ($_POST['submit'])
     {
         $error .= "Some fields are not correct.";
     }
-    if ($error == "" && !$proxy[proxyid] )
+
+    if ($demo_version)
+    {
+        $msg = "You can not change proxy objects in demo version.";
+    }
+    else if ($error == "" && !$proxy[proxyid] )
     {
         $error = add_proxy($proxy);
 	if (!$error)
