@@ -234,6 +234,44 @@ function get_alerts($status)
     return $alerts;
 }
 
+function get_alerts_bypage($from,$count,$status)
+{
+    $status = intval($status);
+    $q = "SELECT alert_group.*,proxy.proxyname ".
+         "FROM alert_group, proxy ".
+         "WHERE alert_group.proxyid=proxy.proxyid ".
+         "AND alert_group.status = $status ".
+         "ORDER BY update_time DESC ".
+         "LIMIT $from, $count";
+    $result = mysql_query($q);
+
+    $alerts = array();
+    $row = array();
+    while ($row = mysql_fetch_array($result) )
+    {
+        if (strlen($row[pattern]) > 85)
+        {
+            $row[short_pattern] = substr($row[pattern], 0, 80)."...";
+        } else {
+            $row[short_pattern] = $row[pattern];
+        }
+        $alerts[] = $row;
+    }
+    return $alerts;
+}
+
+function get_num_alerts($status)
+{
+    $status = intval($status);
+    $q = "SELECT count(*) FROM alert_group ".
+         "WHERE status = $status";
+    $result = mysql_query($q);
+    $row = mysql_fetch_array($result);
+    if (!$row)
+      return 0;
+    return $row[0];
+}
+
 function get_alert($agroupid)
 {
     $agroupid=intval($agroupid);
@@ -270,6 +308,7 @@ function get_raw_alerts($agroupid)
     while ($row = mysql_fetch_array($result) )
     {
         $row[reason] = str_replace("\n", "<br/>\n", $row[reason]);
+
 	if ($row[block] == 1)
 	{
 	    $row[block_str] = "<font color='red'>blocked</font>";
@@ -279,6 +318,54 @@ function get_raw_alerts($agroupid)
 	} else {
 	    $row[block_str] = "unknown";
 	}
+        $alerts[] = $row;
+    }
+    return $alerts;
+}
+
+function get_num_raw_alerts( $status)
+{
+    $q = "SELECT count(*) FROM alert, alert_group ".
+    "WHERE alert.agroupid = alert_group.agroupid AND status = $status ";
+    $result = mysql_query($q);
+    $row = mysql_fetch_array($result);
+    if (!$row)
+      return 0;
+    return $row[0];
+}
+
+function get_raw_alerts_bypage($from, $count, $status)
+{
+    $q = "SELECT * FROM alert, alert_group ".
+         "WHERE alert.agroupid = alert_group.agroupid AND status = $status ".
+         "ORDER BY event_time DESC LIMIT $from, $count";
+    $result = mysql_query($q);
+
+    $alerts = array();
+    $row = array();
+    while ($row = mysql_fetch_array($result) )
+    {
+        $row[reason] = str_replace("\n", "<br/>\n", $row[reason]);
+        if ($row[block] == 1)
+        {
+            $row[block_str] = "<font color='red'>blocked</font>";
+	    $row[color] = "#ffe9e9"; # a light red
+        } else if ($row[block] == 0)
+        {
+            $row[block_str] = "<font color='orange'>warning</font>";
+	    $row[color] = "#ffffe0"; # a light orange
+        } else {
+            $row[block_str] = "unknown";
+	    $row[color] = "#f9f9f9"; # a light grey
+        }
+
+        if (strlen($row[query]) > 85)
+        {
+            $row[short_query] = substr($row[query], 0, 80)."...";
+        } else {
+            $row[short_query] = $row[query];
+        }
+
         $alerts[] = $row;
     }
     return $alerts;
@@ -299,7 +386,7 @@ function approve_alert($agroupid, $alert)
         $q = "INSERT INTO db_perm (proxyid, db_name) ".
 	     "values ($alert[proxyid],".
 	     "'".mysql_escape_string($alert[db_name])."')"; 
-	print $q;
+	#print $q;
 	$result = mysql_query($q);
     }
     $q = "INSERT INTO query (proxyid,perm,db_name,query) ".
