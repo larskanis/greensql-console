@@ -1,17 +1,18 @@
 <html>
 <head>
 <title>{$Name}</title>
+<link rel="stylesheet" type="text/css" href="/style.css" />
+
+
 </head>
 <body>
-<h3 align="center">{$Name}</h3>
-<br/>
-<br/>
+<font color="#00e000"><h3 align="center">{$Name}</h3></font>
 
 <form method="POST">
 <table cellspacing=0 cellpadding=0 align="center">
 
 {if $demo }
-<tr><td colspan=2><strong>Demo User: admin<br/>Demo Pass: pwd</strong><br/><br/></td></tr>
+<tr><td colspan=2><strong>Demo user: admin<br/>Demo pass: pwd</strong><br/><br/></td></tr>
 {/if}
 
 {if $msg }
