@@ -24,7 +24,7 @@ if ($_POST[login] && isset($_POST[user]) && isset($_POST[pass]))
     {
         $_SESSION[userid]= $u[userid];
         $_SESSION[user] = $user;
-	header("location: stats.php");
+	header("location: dashboard.php");
 	exit;
     } else {
         $error = "Bad username/password.";
@@ -33,7 +33,7 @@ if ($_POST[login] && isset($_POST[user]) && isset($_POST[pass]))
     }
 }
 
-$smarty->assign("Name","GreenSQL Login Page");
+$smarty->assign("Name","GreenSQL");
 $smarty->assign("demo",$demo_version);
 $error = "";
 
