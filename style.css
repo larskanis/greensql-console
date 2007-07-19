@@ -1,0 +1,33 @@
+A:link {text-decoration: none; color: #00cc00; }
+A:visited {text-decoration: none; color: #000000;}
+A:hover {text-decoration: underline; }
+table {
+ border-width:1px;
+ border-style: hidden;
+border-collapse: collapse;
+}
+table td {
+ border-width:1px;
+ padding: 1px;
+ border-style: dotted;
+ border-color:grey;
+}
+
+#help {
+ border: 1px dotted;
+ background: #ffe9e9;
+}
+
+#help_content {
+ display: none;
+}
+
+#show_help {
+ display: none;
+}
+
+#menu A:visited {
+text-decoration: underline;
+color: #00cc00;
+}
+
