@@ -17,7 +17,7 @@
 <tr><td colspan=2>&nbsp;</td></tr>
 { if $DB_ProxyID }
 <tr>
- <td>Select Proxy Listener:</td>
+ <td>Select Listener:</td>
  <td>
  <select name=proxyid>
  {html_options values=$option_values selected=$option_selected output=$option_output}
