@@ -17,7 +17,14 @@ $smarty->assign("Page","db_add.tpl");
 
 if ($proxy_id && $db_name)
 {
-    $error = add_database($proxy_id, $db_name);
+    if (!ereg("^[a-zA-Z0-9_]+$",$db_name))
+    {
+        $error = "Database Name is invalid. It contains illegal chars.";
+    }
+    if (!$error)
+    {
+        $error = add_database($proxy_id, $db_name);
+    }
     if ($error)
     {
         $msg = "<font color='red'>$error</font>";
