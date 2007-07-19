@@ -17,15 +17,15 @@
   
 <tr><td colspan=2>&nbsp;</td></tr>
 
-<tr><td valign="top" width="100">Old Password</td>
+<tr><td valign="top" width="100">Old password</td>
     <td><input type="password" name="oldpass" value=""></td>
 </tr>
 
-<tr><td valign="top" width="100">New Password</td>
+<tr><td valign="top" width="100">New password</td>
     <td><input type="password" name="pass" value=""></td>
 </tr>
 
-<tr><td valign="top" width="100">Verify Password</td>
+<tr><td valign="top" width="100">Verify password</td>
     <td><input type="password" name="pass2" value=""></td>
 </tr>
 
