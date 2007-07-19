@@ -14,7 +14,7 @@ $smarty->compile_check = true;
 if ($proxy_id && $proxy_id != 0)
 {
     $proxy = get_proxy($proxy_id);
-    $smarty->assign("Name","Edit Proxy: $proxy[proxyname]");
+    $smarty->assign("Name","Edit Listener: $proxy[proxyname]");
 }
 $msg = "";
 $error = "";
@@ -52,40 +52,40 @@ if ($_POST['submit'])
 
     if ($demo_version)
     {
-        $msg = "You can not change proxy objects in demo version.";
+        $error = "You can not change proxy objects in demo version.";
     }
     else if ($error == "" && !$proxy[proxyid] )
     {
         $error = add_proxy($proxy);
 	if (!$error)
 	{
-	    $msg = "Proxy has been succesfully added.";
+	    $msg = "Listener has been succesfully added.";
 	}
     } else if ($error == "")
     {
         $error = update_proxy($proxy);
 	if (!$error)
 	{
-	    $msg = "Proxy has been succesfully updated.";
+	    $msg = "Listener has been succesfully updated.";
 	}
     }
     if ($error)
         $msg = "<font color='red'>$error</font>";
     
-    $smarty->assign("Name","Edit Proxy: $proxy[proxyname]");
+    $smarty->assign("Name","Edit listener: $proxy[proxyname]");
     $smarty->assign("msg", $msg); 
 }
 
 if (!$proxy_id)
 {
     $proxy[frontend_ip] = "127.0.0.1";
-    $smarty->assign("Name","Add Proxy");
+    $smarty->assign("Name","Add listener");
 }
 
 $smarty->assign("Page","proxy_add.tpl");
 
-$dbs = get_databases();
-$smarty->assign("databases", $dbs);
+$proxies = get_proxies();
+$smarty->assign("proxies", $proxies);
 
 $smarty->assign("PROXY_Name",         $proxy[proxyname]);
 $smarty->assign("PROXY_ID",           $proxy[proxyid]);
