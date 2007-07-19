@@ -3,7 +3,7 @@
 <pre>{$msg}</pre>
 {/if }
 
-<table cellspacing="0" cellpadding="0" width="95%" align="left" border=1>
+<table cellspacing="0" cellpadding="0" width="95%" border=1>
 <tr><td width="80" valign="top">Pattern</td><td>{$AGROUP_pattern}</td></tr>
 <tr><td>Alert ID</td><td>{$AGROUP_agroupid}</td></tr>
 <tr><td>Time</td><td>{$AGROUP_update_time}</td></tr>
@@ -31,6 +31,9 @@ This query has bad format. You can only ignore it.<br/><br/>
 { else }
 <tr><td colspan=2>&nbsp;</td></tr>
 { /if }
+</table>
+<h3>Matching queries:</h3>
+<table cellspacing="0" cellpadding="0" width="95%" border=1>
 {section name=sec2 loop=$alerts}
 <tr><td width="80" valign="top">Query:</td><td>{$alerts[sec2].query}</td></tr>
 <tr><td>Time:</td><td>{$alerts[sec2].event_time}</td><tr>
