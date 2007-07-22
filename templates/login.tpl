@@ -20,7 +20,7 @@
 {/if }
 
 <tr><td valign="top" width="100">Username</td>
-    <td><input type="string" name="user" value=""></td>
+    <td><input type="text" name="user" value=""></td>
 </tr>
 <tr><td valign="top" width="100">Password</td>
     <td><input type="password" name="pass" value=""></td>
