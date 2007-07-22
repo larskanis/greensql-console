@@ -13,21 +13,43 @@ table td {
  border-color:grey;
 }
 
-#help {
+#help_content {
  border: 1px dotted;
  background: #ffe9e9;
+ display: none;
+ float:left;
+ margin-bottom: 10px;
+}
+#help_content h3 {
+ margin: 0px;
+}
+#help_text {
+ float: left;
+  margin: 0px 10px 10px 10px;
 }
 
-#help_content {
- display: none;
+#hide_help {
+ text-align: right;
+ float: right;
 }
 
 #show_help {
  display: none;
+ text-align: right;
+ float: right;
+ margin:1px;
 }
-
-#menu A:visited {
+#show_help A:visited {
+color: #00cc00;
+}
+#hide_help A:visited {
+color: #00cc00;
+}
+#help_text A {
+color: #00cc00;
 text-decoration: underline;
+}
+#menu A:visited {
 color: #00cc00;
 }
 
