@@ -14,7 +14,7 @@ $smarty->compile_check = true;
 if ($proxy_id && $proxy_id != 0)
 {
     $proxy = get_proxy($proxy_id);
-    $smarty->assign("Name","Edit Listener: $proxy[proxyname]");
+    $smarty->assign("Name","Edit GreenSQL Listener: $proxy[proxyname]");
 }
 $msg = "";
 $error = "";
