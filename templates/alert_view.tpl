@@ -7,7 +7,7 @@
 <tr><td width="80" valign="top">Pattern</td><td>{$AGROUP_pattern}</td></tr>
 <tr><td>Alert ID</td><td>{$AGROUP_agroupid}</td></tr>
 <tr><td>Time</td><td>{$AGROUP_update_time}</td></tr>
-<tr><td>Proxy</td><td>{$AGROUP_proxyname}</td></tr>
+<tr><td>Listener</td><td>{$AGROUP_proxyname}</td></tr>
 <tr><td>DB</td><td>{$AGROUP_db_name}</td></tr>
 {if $AGROUP_status == 0 && $AGROUP_bad == 0}
 <tr><td colspan=2><br/>
