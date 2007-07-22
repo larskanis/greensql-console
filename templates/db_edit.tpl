@@ -17,7 +17,7 @@
 <tr><td colspan=2>&nbsp;</td></tr>
 { if $DB_ProxyID }
 <tr>
- <td>Select Listener:</td>
+ <td>GreenSQL Listener:</td>
  <td>
  <select name=proxyid>
  {html_options values=$option_values selected=$option_selected output=$option_output}
@@ -67,7 +67,6 @@
  </td>
 <tr>
 
- 
 <tr>
  <td colspan=2 align=center><br/><input type=submit name=submit value="submit"></input></td>
 </tr>
