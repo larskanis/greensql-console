@@ -1,17 +1,16 @@
-<div id='help'>
 <div id="help_content">
-<h3>What is database?</h3>
-Database name coinside with the back end server database name.<br/>
-<center>
-<a href="javascript:hide_help();void(0);">hide help</a>
-</center>
+<div id="hide_help">
+<a href="javascript:hide_help();void(0);">hide</a>
+</div>
+<div id="help_text">
+<h3>What is a database?</h3>
+Database names coincide to the names of databases on the backend SQL server.  A database should be coupled with a GreenSQL <a href="proxy_add.php">Listener object</a>. A number of databases can use the same GreenSQL Listener.  You can edit the permissions for each database to block actions such as changes to DB structure, execution of sensitive commands.  <br/>
+</div>
 </div>
 <div id="show_help">
-<center>
-<a href="javascript:show_help();void(0);">show help</a>
-</center>
+<a href="javascript:show_help();void(0);">help</a>
 </div>
-</div>
+
 <h3>Databases</h3>
 {section name=sec1 loop=$databases}
 <strong>{$databases[sec1].name}</strong>&nbsp;
@@ -33,7 +32,7 @@ Database name coinside with the back end server database name.<br/>
 <tr><td colspan=2>&nbsp;</td></tr>
 
 <tr>
- <td>Select listener:</td>
+ <td>GreenSQL Listener:</td>
  <td>
  <select name=proxyid>
  {html_options values=$option_values selected=$option_selected output=$option_output}
@@ -41,8 +40,10 @@ Database name coinside with the back end server database name.<br/>
  </td>
 </tr>
 
+<tr><td colspan=2>&nbsp;</td></tr>
+
 <tr>
- <td colspan=2 align=center><br/><input type=submit name=submit value="submit"></input></td>
+ <td colspan=2 align=center><input type=submit name=submit value="submit"></input></td>
 </tr>
 
 </table>  
