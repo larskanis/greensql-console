@@ -5,7 +5,7 @@
 <div id="help_text">
 <h3>What is a GreenSQL Listener?</h3>
 A GreenSQL Listener object is the heart of the GreenSQL Databae Firewall.  A Listener is a proxy object used to connect queries from the frontend to a specific backend server.  Before passing the query to the backend it is checked by the Listener to determine if it is malicious and if so how it should be handled (block, alert, pass).
-<br/><img src="images/greensql-listener.gif">
+<br/><img src="images/listener.gif">
 <br/>
 </div>
 </div>
