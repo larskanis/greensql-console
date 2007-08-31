@@ -8,7 +8,7 @@ $db_port = 3306;
 
 $db_name = "greendb";
 $db_user = "green";
-$db_pass = "green";
+$db_pass = "pwd";
 
 $log_file = "/var/log/greensql.log";
 
