@@ -41,6 +41,7 @@ function check_user($user, $pass)
     $row = mysql_fetch_array($result);
     return $row;
 }
+
 function get_user($userid)
 {
     $userid=intval($userid);
@@ -225,10 +226,11 @@ function get_alerts($status)
     {
         if (strlen($row[pattern]) > 85)
 	{
-            $row[short_pattern] = substr($row[pattern], 0, 80)."...";
+            $row[short_pattern] = htmlspecialchars(substr($row[pattern], 0, 80)."...");
 	} else {
-	    $row[short_pattern] = $row[pattern];
+	    $row[short_pattern] = htmlspecialchars($row[pattern]);
 	}
+        $row[pattern] = htmlspecialchars($row[pattern]);
         $alerts[] = $row;
     }
     return $alerts;
@@ -251,10 +253,11 @@ function get_alerts_bypage($from,$count,$status)
     {
         if (strlen($row[pattern]) > 85)
         {
-            $row[short_pattern] = substr($row[pattern], 0, 80)."...";
+            $row[short_pattern] = htmlspecialchars(substr($row[pattern], 0, 80)."...");
         } else {
-            $row[short_pattern] = $row[pattern];
+            $row[short_pattern] = htmlspecialchars($row[pattern]);
         }
+        $row[pattern] = htmlspecialchars($row[pattern]);
         $alerts[] = $row;
     }
     return $alerts;
@@ -289,10 +292,11 @@ function get_alert($agroupid)
         return $row;
     if (strlen($row[pattern]) > 85)
     {
-        $row[short_pattern] = substr($row[pattern], 0, 80)."...";
+        $row[short_pattern] = htmlspecialchars(substr($row[pattern], 0, 80)."...");
     } else {
-        $row[short_pattern] = $row[pattern];
+        $row[short_pattern] = htmlspecialchars($row[pattern]);
     }
+    $row[pattern] = htmlspecialchars($row[pattern]);
     return $row;
 }
 
@@ -318,6 +322,7 @@ function get_raw_alerts($agroupid)
 	} else {
 	    $row[block_str] = "unknown";
 	}
+        $row[query] = htmlspecialchars($row[query]);
         $alerts[] = $row;
     }
     return $alerts;
@@ -361,10 +366,12 @@ function get_raw_alerts_bypage($from, $count, $status)
 
         if (strlen($row[query]) > 85)
         {
-            $row[short_query] = substr($row[query], 0, 80)."...";
+            $row[short_query] = htmlspecialchars(substr($row[query], 0, 80)."...");
         } else {
-            $row[short_query] = $row[query];
+            $row[short_query] = htmlspecialchars($row[query]);
         }
+        $row[query] = htmlspecialchars($row[query]);
+        $row[pattern] = htmlspecialchars($row[pattern]);
 
         $alerts[] = $row;
     }
