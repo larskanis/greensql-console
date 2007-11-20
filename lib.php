@@ -160,8 +160,8 @@ function add_proxy($proxy)
         return "Failed to add new proxy, same frontend ip and port already used.";
     $q = "INSERT into proxy (proxyname, frontend_ip, frontend_port, ".
     "backend_server, backend_ip, backend_port, dbtype, state) VALUES (".
-    "'".$proxy[proxyname]."', ".
-    "INET_ATON('".$proxy[frontend_ip]."'), ".
+    "'".$proxy['proxyname']."', ".
+    "INET_ATON('".$proxy['frontend_ip']."'), ".
     $proxy['frontend_port'].", ".
     "'".$proxy['backend_server']."', ".
     "INET_ATON('".$proxy['backend_ip']."'), ".
@@ -172,9 +172,9 @@ function add_proxy($proxy)
 
 function update_proxy($proxy)
 {
-    $proxy[frontend_ip] = mysql_escape_string($proxy['frontend_ip']);
-    $proxy[backend_ip] = mysql_escape_string($proxy['backend_ip']);
-    $proxy[backend_server] = mysql_escape_string($proxy['backend_server']);
+    $proxy['frontend_ip'] = mysql_escape_string($proxy['frontend_ip']);
+    $proxy['backend_ip'] = mysql_escape_string($proxy['backend_ip']);
+    $proxy['backend_server'] = mysql_escape_string($proxy['backend_server']);
 
     #check if this backend already used
     $q = "SELECT * from proxy WHERE ".
@@ -187,11 +187,11 @@ function update_proxy($proxy)
     if ($row)
         return "Failed to update proxy, same frontend ip and port already used.";
     $q = "UPDATE proxy SET ".
-    "proxyname = '$proxy[proxyname]', ".
-    "frontend_ip = INET_ATON('$proxy[frontend_ip]'), ".
+    "proxyname = '".$proxy['proxyname']."', ".
+    "frontend_ip = INET_ATON('".$proxy['frontend_ip']."'), ".
     "frontend_port = ".$proxy['frontend_port'].", ".
     "backend_server = '".$proxy['backend_server']."', ".
-    "backend_ip = INET_ATON('$proxy[backend_ip]'), ".
+    "backend_ip = INET_ATON('".$proxy['backend_ip']."'), ".
     "backend_port = ".$proxy['backend_port'].", ".
     "dbtype = 'mysql', ".
     "status = 0 WHERE proxyid = ".$proxy['proxyid'];
@@ -386,9 +386,17 @@ function approve_alert($agroupid, $alert)
 {
     $agroupid=intval($agroupid);
     # first we will check we we have this database created
-    $q = "SELECT * from db_perm WHERE ".
-         "db_name='".mysql_escape_string($alert['db_name'])."' AND ".
-	 "proxyid=".intval($alert['proxyid']);
+    $q = "";
+    if ($alert['db_name'] == "")
+    {
+      # load default db name  
+      $q = "SELECT * from db_perm WHERE dbpid = 1";
+    } else {
+      # load default db name
+      $q = "SELECT * from db_perm WHERE ".
+           "db_name='".mysql_escape_string($alert['db_name'])."' AND ".
+           "proxyid=".intval($alert['proxyid']);
+    }
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
     if (!$row)

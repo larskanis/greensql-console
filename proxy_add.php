@@ -1,6 +1,7 @@
 <?
 
 require 'lib.php';
+global $demo_version;
 
 require 'libs/Smarty.class.php';
 

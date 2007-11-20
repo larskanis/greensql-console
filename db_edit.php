@@ -90,7 +90,7 @@ $dbs = get_databases();
 
 $smarty->assign("databases", $dbs);
 
-$smarty->assign("Name","Edit database - $db['db_name']");
+$smarty->assign("Name","Edit database - ".$db['db_name']);
 $smarty->assign("Page","db_edit.tpl");
 $smarty->assign("DB_Name", $db['db_name']);
 $smarty->assign("DB_ProxyName", $db['proxyname']);
