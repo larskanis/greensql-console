@@ -4,8 +4,16 @@ require 'lib.php';
 
 require 'libs/Smarty.class.php';
 
-$proxy_id = intval($_POST[proxyid]);
-$db_name = $_POST[dbname];
+$proxy_id = 0;
+if (isset($_POST['proxyid']))
+{
+    $proxy_id = intval($_POST['proxyid']);
+}
+$db_name = "";
+if (isset($_POST['dbname']))
+{
+    $db_name = trim($_POST['dbname']);
+}
 $error = "";
 $msg = "";
 
@@ -43,8 +51,8 @@ $names = array();
 
 foreach ($proxies as $proxy)
 {
-    $ids[] = $proxy[proxyid];
-    $names[] = $proxy[proxyname];
+    $ids[] = $proxy['proxyid'];
+    $names[] = $proxy['proxyname'];
 }
 
 $smarty->assign("option_values", $ids);

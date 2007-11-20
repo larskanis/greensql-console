@@ -6,8 +6,11 @@ require 'libs/Smarty.class.php';
 
 $error = "";
 $msg = "";
-
-$start_id = intval($_GET[p]);
+$start_id = 0;
+if (isset($_GET['p']))
+{
+    $start_id = intval($_GET['p']);
+}
 $limit_per_page = 10;
 
 $smarty = new Smarty;
@@ -24,6 +27,7 @@ $alerts = get_raw_alerts_bypage($start_id*$limit_per_page, $limit_per_page, $sta
 $smarty->assign("alerts", $alerts);
 
 $numResults = get_num_raw_alerts($status);
+$list_pages = "";
 
   $file = 'rawalert_list.php';
   // update list of pages

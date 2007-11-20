@@ -14,7 +14,7 @@ $smarty->assign("Name","Clean GreenSQL alerts");
 $smarty->assign("Page","cleanall.tpl");
 
 $msg = "";
-if ($_POST['submit'])
+if (isset($_POST['submit']))
 {
     truncate_alerts();
     $msg = "Allerts has been removed.";

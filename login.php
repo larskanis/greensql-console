@@ -1,11 +1,12 @@
 <?php
 
 session_start();
-$_SESSION[login] = 1;
+$_SESSION['login'] = 1;
 
 require 'lib.php';
+global $demo_version;
 
-$_SESSION[login] = undef;
+$_SESSION['login'] = "";
 
 require 'libs/Smarty.class.php';
 $error = "";
@@ -15,15 +16,15 @@ $lines = 200;
 $smarty = new Smarty;
 $smarty->compile_check = true;
 
-if ($_POST[login] && isset($_POST[user]) && isset($_POST[pass]))
+if (isset($_POST['login']) && isset($_POST['user']) && isset($_POST['pass']))
 {
-    $user = trim($_POST[user]);
-    $pass = trim($_POST[pass]);
+    $user = trim($_POST['user']);
+    $pass = trim($_POST['pass']);
     $pass = sha1($pass);
     if ($u = check_user($user, $pass))
     {
-        $_SESSION[userid]= $u[userid];
-        $_SESSION[user] = $user;
+        $_SESSION['userid']= $u['userid'];
+        $_SESSION['user'] = $user;
 	header("location: dashboard.php");
 	exit;
     } else {

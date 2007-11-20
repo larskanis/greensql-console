@@ -1,6 +1,10 @@
 <?php
 
-session_start();
+if (!(isset($_SESSION['login']) && $_SESSION['login'] == 1))
+{
+    session_start();
+}
+
 include_once 'config.php';
 
 header("Cache-Control: no-cache, must-revalidate");
@@ -11,7 +15,7 @@ if ( ($error = db_connect()) != "")
     die( $error);
 }
 
-if ($_SESSION[login] != 1 && !isset($_SESSION[user]))
+if ($_SESSION['login'] != 1 && !isset($_SESSION['user']))
 {
     header("location: login.php");
     exit;
@@ -53,10 +57,10 @@ function get_user($userid)
 
 function update_user($user)
 {
-    $q = "UPDATE user SET name='".mysql_escape_string($user[name])."', ".
-    "email = '".mysql_escape_string($user[email])."', ".
-    "pwd = SHA1('".mysql_escape_string($user[pwd])."') ".
-    "WHERE userid=$user[userid]";
+    $q = "UPDATE user SET name='".mysql_escape_string($user['name'])."', ".
+    "email = '".mysql_escape_string($user['email'])."', ".
+    "pwd = SHA1('".mysql_escape_string($user['pwd'])."') ".
+    "WHERE userid=".$user['userid'];
     $result = mysql_query($q);
     return;
 }
@@ -70,8 +74,8 @@ function get_databases()
     $dbs = array();
     while ($row = mysql_fetch_array($result) )
     {
-        $dbs[] = array("id" => $row[dbpid], "name" => $row[db_name],
-                       "proxy_id" => $row[proxyid]);
+        $dbs[] = array("id" => $row['dbpid'], "name" => $row['db_name'],
+                       "proxy_id" => $row['proxyid']);
     }
     return $dbs;
 }
@@ -90,8 +94,8 @@ function get_database($dbid)
     $row = mysql_fetch_array($result);
     if (!$row)
         return $row;
-    $row[listener] = $row[frontend_ip].":".$row[frontend_port];
-    $row[backend] = $row[backend_server].":".$row[backend_port];
+    $row['listener'] = $row['frontend_ip'].":".$row['frontend_port'];
+    $row['backend'] = $row['backend_server'].":".$row['backend_port'];
     return $row;
 }
 
@@ -117,14 +121,14 @@ function add_database($proxyid, $name)
 function update_database($db)
 {
     $q = "UPDATE db_perm SET ".
-    "proxyid=$db[proxyid], ".
-    "db_name='$db[db_name]', ".
-    "create_perm=$db[create_perm], ".
-    "drop_perm=$db[drop_perm], ".
-    "alter_perm=$db[alter_perm], ".
-    "info_perm=$db[info_perm], ".
-    "block_q_perm=$db[block_q_perm] ".
-    "WHERE dbpid=$db[dbpid]";
+    "proxyid=".$db['proxyid'].", ".
+    "db_name='".$db['db_name']."', ".
+    "create_perm=".$db['create_perm'].", ".
+    "drop_perm=".$db['drop_perm'].", ".
+    "alter_perm=".$db['alter_perm'].", ".
+    "info_perm=".$db['info_perm'].", ".
+    "block_q_perm=".$db['block_q_perm']." ".
+    "WHERE dbpid=".$db['dbpid'];
     $result = mysql_query($q); 
 }
 
@@ -142,41 +146,41 @@ function get_proxy($proxyid)
 
 function add_proxy($proxy)
 {
-    $proxy[frontend_ip] = mysql_escape_string($proxy[frontend_ip]);
-    $proxy[backend_ip] = mysql_escape_string($proxy[backend_ip]);
-    $proxy[backend_server] = mysql_escape_string($proxy[backend_server]);
+    $proxy['frontend_ip'] = mysql_escape_string($proxy['frontend_ip']);
+    $proxy['backend_ip'] = mysql_escape_string($proxy['backend_ip']);
+    $proxy['backend_server'] = mysql_escape_string($proxy['backend_server']);
 
     #check if this backend already used
     $q = "SELECT * from proxy WHERE ".
-    "frontend_ip = INET_ATON('$proxy[frontend_ip]') AND ".
-    "frontend_port = ".$proxy[frontend_port];
+    "frontend_ip = INET_ATON('".$proxy['frontend_ip']."') AND ".
+    "frontend_port = ".$proxy['frontend_port'];
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
     if ($row)
         return "Failed to add new proxy, same frontend ip and port already used.";
     $q = "INSERT into proxy (proxyname, frontend_ip, frontend_port, ".
     "backend_server, backend_ip, backend_port, dbtype, state) VALUES (".
-    "'$proxy[proxyname]', ".
-    "INET_ATON('$proxy[frontend_ip]'), ".
-    "$proxy[frontend_port], ".
-    "'$proxy[backend_server]', ".
-    "INET_ATON('$proxy[backend_ip]'), ".
-    "$proxy[backend_port], ".
+    "'".$proxy[proxyname]."', ".
+    "INET_ATON('".$proxy[frontend_ip]."'), ".
+    $proxy['frontend_port'].", ".
+    "'".$proxy['backend_server']."', ".
+    "INET_ATON('".$proxy['backend_ip']."'), ".
+    $proxy['backend_port'].", ".
     "'mysql',0)"; 
     $result = mysql_query($q);
 }
 
 function update_proxy($proxy)
 {
-    $proxy[frontend_ip] = mysql_escape_string($proxy[frontend_ip]);
-    $proxy[backend_ip] = mysql_escape_string($proxy[backend_ip]);
-    $proxy[backend_server] = mysql_escape_string($proxy[backend_server]);
+    $proxy[frontend_ip] = mysql_escape_string($proxy['frontend_ip']);
+    $proxy[backend_ip] = mysql_escape_string($proxy['backend_ip']);
+    $proxy[backend_server] = mysql_escape_string($proxy['backend_server']);
 
     #check if this backend already used
     $q = "SELECT * from proxy WHERE ".
-    "frontend_ip=INET_ATON('$proxy[frontend_ip]') AND ".
-    "frontend_port = $proxy[frontend_port] AND ".
-    "proxyid != $proxy[proxyid]";
+    "frontend_ip=INET_ATON('".$proxy['frontend_ip']."') AND ".
+    "frontend_port = ".$proxy['frontend_port']." AND ".
+    "proxyid != ".$proxy['proxyid'];
 
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
@@ -185,12 +189,12 @@ function update_proxy($proxy)
     $q = "UPDATE proxy SET ".
     "proxyname = '$proxy[proxyname]', ".
     "frontend_ip = INET_ATON('$proxy[frontend_ip]'), ".
-    "frontend_port = $proxy[frontend_port], ".
-    "backend_server = '$proxy[backend_server]', ".
+    "frontend_port = ".$proxy['frontend_port'].", ".
+    "backend_server = '".$proxy['backend_server']."', ".
     "backend_ip = INET_ATON('$proxy[backend_ip]'), ".
-    "backend_port = $proxy[backend_port], ".
+    "backend_port = ".$proxy['backend_port'].", ".
     "dbtype = 'mysql', ".
-    "status = 0 WHERE proxyid = $proxy[proxyid]";
+    "status = 0 WHERE proxyid = ".$proxy['proxyid'];
     $result = mysql_query($q);
 }
 
@@ -224,13 +228,13 @@ function get_alerts($status)
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
-        if (strlen($row[pattern]) > 85)
+        if (strlen($row['pattern']) > 85)
 	{
-            $row[short_pattern] = htmlspecialchars(substr($row[pattern], 0, 80)."...");
+            $row['short_pattern'] = htmlspecialchars(substr($row['pattern'], 0, 80)."...");
 	} else {
-	    $row[short_pattern] = htmlspecialchars($row[pattern]);
+	    $row['short_pattern'] = htmlspecialchars($row['pattern']);
 	}
-        $row[pattern] = htmlspecialchars($row[pattern]);
+        $row['pattern'] = htmlspecialchars($row['pattern']);
         $alerts[] = $row;
     }
     return $alerts;
@@ -251,13 +255,13 @@ function get_alerts_bypage($from,$count,$status)
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
-        if (strlen($row[pattern]) > 85)
+        if (strlen($row['pattern']) > 85)
         {
-            $row[short_pattern] = htmlspecialchars(substr($row[pattern], 0, 80)."...");
+            $row['short_pattern'] = htmlspecialchars(substr($row['pattern'], 0, 80)."...");
         } else {
-            $row[short_pattern] = htmlspecialchars($row[pattern]);
+            $row['short_pattern'] = htmlspecialchars($row['pattern']);
         }
-        $row[pattern] = htmlspecialchars($row[pattern]);
+        $row['pattern'] = htmlspecialchars($row['pattern']);
         $alerts[] = $row;
     }
     return $alerts;
@@ -290,13 +294,13 @@ function get_alert($agroupid)
     
     if (!$row)
         return $row;
-    if (strlen($row[pattern]) > 85)
+    if (strlen($row['pattern']) > 85)
     {
-        $row[short_pattern] = htmlspecialchars(substr($row[pattern], 0, 80)."...");
+        $row['short_pattern'] = htmlspecialchars(substr($row['pattern'], 0, 80)."...");
     } else {
-        $row[short_pattern] = htmlspecialchars($row[pattern]);
+        $row['short_pattern'] = htmlspecialchars($row['pattern']);
     }
-    $row[pattern] = htmlspecialchars($row[pattern]);
+    $row['pattern'] = htmlspecialchars($row['pattern']);
     return $row;
 }
 
@@ -311,18 +315,18 @@ function get_raw_alerts($agroupid)
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
-        $row[reason] = str_replace("\n", "<br/>\n", $row[reason]);
+        $row['reason'] = str_replace("\n", "<br/>\n", $row['reason']);
 
-	if ($row[block] == 1)
+	if ($row['block'] == 1)
 	{
-	    $row[block_str] = "<font color='red'>blocked</font>";
-	} else if ($row[block] == 0)
+	    $row['block_str'] = "<font color='red'>blocked</font>";
+	} else if ($row['block'] == 0)
 	{
-	    $row[block_str] = "<font color='orange'>warning</font>";
+	    $row['block_str'] = "<font color='orange'>warning</font>";
 	} else {
-	    $row[block_str] = "unknown";
+	    $row['block_str'] = "unknown";
 	}
-        $row[query] = htmlspecialchars($row[query]);
+        $row['query'] = htmlspecialchars($row['query']);
         $alerts[] = $row;
     }
     return $alerts;
@@ -350,28 +354,28 @@ function get_raw_alerts_bypage($from, $count, $status)
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
-        $row[reason] = str_replace("\n", "<br/>\n", $row[reason]);
-        if ($row[block] == 1)
+        $row['reason'] = str_replace("\n", "<br/>\n", $row['reason']);
+        if ($row['block'] == 1)
         {
-            $row[block_str] = "<font color='red'>blocked</font>";
-	    $row[color] = "#ffe9e9"; # a light red
-        } else if ($row[block] == 0)
+            $row['block_str'] = "<font color='red'>blocked</font>";
+	    $row['color'] = "#ffe9e9"; # a light red
+        } else if ($row['block'] == 0)
         {
-            $row[block_str] = "<font color='orange'>warning</font>";
-	    $row[color] = "#ffffe0"; # a light orange
+            $row['block_str'] = "<font color='orange'>warning</font>";
+	    $row['color'] = "#ffffe0"; # a light orange
         } else {
-            $row[block_str] = "unknown";
-	    $row[color] = "#f9f9f9"; # a light grey
+            $row['block_str'] = "unknown";
+	    $row['color'] = "#f9f9f9"; # a light grey
         }
 
-        if (strlen($row[query]) > 85)
+        if (strlen($row['query']) > 85)
         {
-            $row[short_query] = htmlspecialchars(substr($row[query], 0, 80)."...");
+            $row['short_query'] = htmlspecialchars(substr($row['query'], 0, 80)."...");
         } else {
-            $row[short_query] = htmlspecialchars($row[query]);
+            $row['short_query'] = htmlspecialchars($row['query']);
         }
-        $row[query] = htmlspecialchars($row[query]);
-        $row[pattern] = htmlspecialchars($row[pattern]);
+        $row['query'] = htmlspecialchars($row['query']);
+        $row['pattern'] = htmlspecialchars($row['pattern']);
 
         $alerts[] = $row;
     }
@@ -383,21 +387,21 @@ function approve_alert($agroupid, $alert)
     $agroupid=intval($agroupid);
     # first we will check we we have this database created
     $q = "SELECT * from db_perm WHERE ".
-         "db_name='".mysql_escape_string($alert[db_name])."' AND ".
-	 "proxyid=".intval($alert[proxyid]);
+         "db_name='".mysql_escape_string($alert['db_name'])."' AND ".
+	 "proxyid=".intval($alert['proxyid']);
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
     if (!$row)
     {
         # this object was not found
         $q = "INSERT INTO db_perm (proxyid, db_name) ".
-	     "values ($alert[proxyid],".
-	     "'".mysql_escape_string($alert[db_name])."')"; 
+	     "values (".$alert['proxyid'].",".
+	     "'".mysql_escape_string($alert['db_name'])."')"; 
 	#print $q;
 	$result = mysql_query($q);
     }
     $q = "INSERT INTO query (proxyid,perm,db_name,query) ".
-    "VALUES($alert[proxyid],1,'$alert[db_name]','$alert[pattern]')";
+    "VALUES(".$alert['proxyid'].",1,'".$alert['db_name']."','".$alert['pattern']."')";
     $result = mysql_query($q);
 
     $q = "UPDATE alert_group set status=1 WHERE agroupid=$agroupid";

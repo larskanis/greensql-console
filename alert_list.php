@@ -7,12 +7,16 @@ require 'libs/Smarty.class.php';
 $error = "";
 $msg = "";
 
-$status = intval($_GET[status]);
+$status = intval($_GET['status']);
 if (!$status)
 {
     $status = 0;
 }
-$start_id = intval($_GET[p]);
+$start_id = 0;
+if (isset($_GET['p']))
+{
+    $start_id = intval($_GET['p']);
+}
 $limit_per_page = 10;
 
 $smarty = new Smarty;
@@ -34,6 +38,8 @@ $alerts = get_alerts_bypage($start_id,$limit_per_page,$status);
 $smarty->assign("alerts", $alerts);
 
 $numResults = get_num_alerts($status);
+
+$list_pages = "";
 
   $file = "alert_list.php?status=$status&";
   // update list of pages
