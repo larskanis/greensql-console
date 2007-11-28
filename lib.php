@@ -15,7 +15,7 @@ if ( ($error = db_connect()) != "")
     die( $error);
 }
 
-if ($_SESSION['login'] != 1 && !isset($_SESSION['user']))
+if (isset($_SESSION['login']) && $_SESSION['login'] != 1 && !isset($_SESSION['user']))
 {
     header("location: login.php");
     exit;
