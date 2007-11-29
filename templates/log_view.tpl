@@ -1,6 +1,7 @@
+{if $HelpPage}
+{include file="$HelpPage"}
+{/if}
 <h3>View Application Logs</h3>
-Only last {$lines} lines are displayed here.<br/>
-Log events are in reverse order.<br/>
 {if $msg }
 <pre>{$msg}</pre>
 {/if }
