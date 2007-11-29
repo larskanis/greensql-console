@@ -1,17 +1,6 @@
-<div id="help_content">
-<div id="hide_help">
-<a href="javascript:hide_help();void(0);">hide</a>
-</div>
-<div id="help_text">
-<h3>What is a GreenSQL Listener?</h3>
-A GreenSQL Listener object is the heart of the GreenSQL Databae Firewall.  A Listener is a proxy object used to connect queries from the frontend to a specific backend server.  Before passing the query to the backend it is checked by the Listener to determine if it is malicious and if so how it should be handled (block, alert, pass).
-<br/><img src="images/listener.gif">
-<br/>
-</div>
-</div>
-<div id="show_help">
-<a href="javascript:show_help();void(0);">help</a>
-</div>
+{if $HelpPage}
+{include file="$HelpPage"}
+{/if}
 <h3>GreenSQL Listeners</h3>
 {section name=sec1 loop=$proxies}
 <strong>{$proxies[sec1].proxyname}</strong>&nbsp;
@@ -66,3 +55,6 @@ A GreenSQL Listener object is the heart of the GreenSQL Databae Firewall.  A Lis
 </table>
 <input type="hidden" name="proxyid" value="{$PROXY_ID}"></input>
 </form>
+{if $HelpPage}
+{include file="$HelpPage"}
+{/if}

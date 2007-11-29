@@ -1,17 +1,7 @@
 { if $status == 1 }
-<div id="help_content">
-<div id="hide_help">
-<a href="javascript:hide_help();void(0);">hide</a>
-</div>
-<div id="help_text">
-<h3>What is a whitelist?</h3>
-A whitelist is a list of SQL patterns that have been approved and will be ignored by GreenSQL.  Patterns can be added to the whitelist once an alert is generated for that pattern.  Find the query in the <a href="alert_list.php">Alerts section</a> and choose to Allow query.<br/>
-</div>
-</div>
-<div id="show_help">
-<a href="javascript:show_help();void(0);">help</a>
-</div>
-
+{if $HelpPage}
+{include file="$HelpPage"}
+{/if}
 { /if }
 <h3>{$Name}</h3>
 {if $msg }

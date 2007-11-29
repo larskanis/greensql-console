@@ -1,16 +1,6 @@
-<div id="help_content">
-<div id="hide_help">
-<a href="javascript:hide_help();void(0);">hide</a>
-</div>
-<div id="help_text">
-<h3>What is a database?</h3>
-Database names coincide to the names of databases on the backend SQL server.  A database should be coupled with a GreenSQL <a href="proxy_add.php">Listener object</a>. A number of databases can use the same GreenSQL Listener.  You can edit the permissions for each database to block actions such as changes to DB structure, execution of sensitive commands.  <br/>
-</div>
-</div>
-<div id="show_help">
-<a href="javascript:show_help();void(0);">help</a>
-</div>
-
+{if $HelpPage}
+{include file="$HelpPage"}
+{/if}
 <h3>Databases</h3>
 {section name=sec1 loop=$databases}
 <strong>{$databases[sec1].name}</strong>&nbsp;
