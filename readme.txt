@@ -15,13 +15,31 @@ Installation
 
 1. Greensql Configuration Database
 
-Before proceeding with the installation, you need to have
-"greensql-fw" configuration database installed in MySQL.
-In order to do it, you can run the following command:
+You can pass this part if you already configured GreenSQL
+configuration database as part of the greensql-fw installation.
 
-cat /usr/share/doc/greensql-fw/greensql-mysql-db.txt | mysql
+In order to create the db, you can run the following command:
 
-This file - greensql-mysql-db.txt is a part of the greensql-fw
+ cat /usr/share/doc/greensql-fw/greensql-mysql-db.txt | mysql -h 127.0.0.1
+
+Description:
+This file "greensql-mysql-db.txt" is a part of the greensql-fw
 package.
+127.0.0.1 is a location of MySQL server used to store configuration.
+Yoy can change it to other IP address where you want the database
+to be stored.
 
-2. 
+2. Alter Configuration Settings
+
+Please change config.php file according to your needs. You can
+alter database location, name, username and password by changing
+this file.
+
+3. "templates_c" Directory Permissions
+Final step is to alter templates_c directory permissions.
+This directory is used to store generated pages used by smarty
+library. You need to make this directory world-writable.
+You can simply run the following command:
+
+chmod 777 templates_c
+
