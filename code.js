@@ -3,6 +3,11 @@ function init_help()
 var help_win = document.getElementById('help_content');
 var show_win = document.getElementById('show_help');
 var show = getCookie('show_help');
+if (!help_win || !show_win)
+{
+  return;
+}
+
 if (show == 1 || show == "")
 {
   setCookie('show_help','1',10);
