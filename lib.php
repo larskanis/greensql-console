@@ -1,5 +1,9 @@
 <?php
 
+#set default time zone - this prevents PHP5 from 
+#showing strange warning messages
+date_default_timezone_set("America/Los_Angeles");
+
 if (!(isset($_SESSION['login']) && $_SESSION['login'] == 1))
 {
     session_start();

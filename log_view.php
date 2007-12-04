@@ -1,12 +1,12 @@
 <?php
 
 require 'lib.php';
+require 'help.php';
 
 require 'libs/Smarty.class.php';
 
 $error = "";
 $msg = "";
-$lines = 200;
 
 $smarty = new Smarty;
 $smarty->compile_check = true;
@@ -15,7 +15,7 @@ $smarty->assign("Name","View GreenSQL Log file");
 $smarty->assign("Page","log_view.tpl");
 $error = "";
 
-$log = read_log($log_file, $lines, $error);
+$log = read_log($log_file, $num_log_lines, $error);
 if ($error)
 {
     print "error\n";
@@ -33,7 +33,13 @@ $dbs = get_databases();
 $smarty->assign("databases", $dbs);
 
 $smarty->assign("Log", $log_data);
-$smarty->assign("lines", $lines);
+
+$help_msg = get_section_help("log_view");
+if ($help_msg)
+{
+  $smarty->assign("HelpPage","help.tpl");
+  $smarty->assign("HelpMsg",$help_msg);
+}
 
 $smarty->display('index.tpl');
 

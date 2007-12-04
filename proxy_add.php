@@ -1,6 +1,7 @@
 <?
 
 require 'lib.php';
+require 'help.php';
 global $demo_version;
 
 require 'libs/Smarty.class.php';
@@ -103,6 +104,12 @@ if (count($proxy) > 1)
 }
 $smarty->assign("PROXY_FrontendIP",   $proxy['frontend_ip']);
 
+$help_msg = get_section_help("proxy_add");
+if ($help_msg)
+{
+  $smarty->assign("HelpPage","help.tpl");
+  $smarty->assign("HelpMsg",$help_msg);
+}
 
 $smarty->display('index.tpl');
 ?>

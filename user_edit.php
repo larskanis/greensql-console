@@ -1,6 +1,8 @@
 <?
 
 require 'lib.php';
+require 'help.php';
+
 global $demo_version;
 
 require 'libs/Smarty.class.php';
@@ -76,6 +78,13 @@ $smarty->assign("Name","View user - ".$user['name']);
 $smarty->assign("Page","user_edit.tpl");
 $smarty->assign("USER_Name", $user['name']);
 $smarty->assign("USER_Email", $user['email']);
+
+$help_msg = get_section_help("user_edit");
+if ($help_msg)
+{
+  $smarty->assign("HelpPage","help.tpl");
+  $smarty->assign("HelpMsg",$help_msg);
+}
 
 $smarty->display('index.tpl');
 ?>

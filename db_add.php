@@ -1,6 +1,7 @@
 <?php
 
 require 'lib.php';
+require 'help.php';
 
 require 'libs/Smarty.class.php';
 
@@ -58,6 +59,13 @@ foreach ($proxies as $proxy)
 $smarty->assign("option_values", $ids);
 $smarty->assign("option_output", $names);
 $smarty->assign("option_selected", "1");
+
+$help_msg = get_section_help("db_add");
+if ($help_msg)
+{
+  $smarty->assign("HelpPage","help.tpl");
+  $smarty->assign("HelpMsg",$help_msg);
+}
 
 $smarty->display('index.tpl');
 

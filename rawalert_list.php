@@ -1,6 +1,7 @@
 <?php
 
 require 'lib.php';
+require 'help.php';
 
 require 'libs/Smarty.class.php';
 
@@ -55,6 +56,14 @@ $list_pages = "";
   $list_pages .= '<br/>';
 
 $smarty->assign("pager", $list_pages);
+
+$help_msg = get_section_help("rawalert_list");
+if ($help_msg)
+{
+  $smarty->assign("HelpPage","help.tpl");
+  $smarty->assign("HelpMsg",$help_msg);
+}
+
 $smarty->display('index.tpl');
 
 ?>
