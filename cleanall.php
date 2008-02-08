@@ -17,8 +17,8 @@ $smarty->assign("Page","cleanall.tpl");
 $msg = "";
 if (isset($_POST['submit']))
 {
-    #truncate_alerts();
-    $msg = "Allerts have been removed.";
+    truncate_alerts();
+    $msg = "All alerts have been removed.";
     $smarty->assign("msg", $msg);
 }
 
