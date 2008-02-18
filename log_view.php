@@ -2,14 +2,10 @@
 
 require 'lib.php';
 require 'help.php';
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $error = "";
 $msg = "";
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
 
 $smarty->assign("Name","View GreenSQL Log file");
 $smarty->assign("Page","log_view.tpl");
