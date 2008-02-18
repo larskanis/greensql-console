@@ -14,10 +14,18 @@ include_once 'config.php';
 header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Mon, 26 jul 1997 05:00:00 GMT");
 
-if ( ($error = db_connect()) != "")
-{
-    die( $error);
-}
+validate_installation();
+require 'libs/Smarty.class.php';
+$smarty = new Smarty;
+$smarty->compile_check = true;
+global $cache_dir;
+$smarty->compile_dir = $cache_dir;
+#$smarty->debugging = true;
+
+#if ( ($error = db_connect()) != "")
+#{
+#    die( $error);
+#}
 
 if (isset($_SESSION['login']) && $_SESSION['login'] != 1 && !isset($_SESSION['user']))
 {
@@ -31,13 +39,69 @@ function db_connect()
   
   #print "dbuser $dbuser $db_user\n";
   if (@mysql_connect("$db_host:$db_port",$db_user,$db_pass) == false)
-      return mysql_error();
+      return "Failed to connect to MySQL server.";
     
   if (@mysql_select_db($db_name) == false)
-      return mysql_error();
+      return "Failed to connect to GreenSQL configuration database.";
 
   return "";
   
+}
+
+function validate_installation()
+{
+    global $cache_dir;
+    global $db_name;
+    $msg = '';
+    $bad = 0;
+    
+    $msg .= "<h2>GreenSQL configuration error</h2>";
+    $msg .= "<h3>1. Cache Directory</h3>\n";
+    if ($cache_dir && !is_writable($cache_dir)) {
+        $msg .= "<i>Cache Directory</i> specifies location of the directory used to create temproary files.<br/>This directory <i><font color='red'>$cache_dir</font></i> is not writable. Run the following shell command to fix this:<br/><blockquote><strong>chmod 0777 $cache_dir</strong></blockquote>";
+        $bad = 1;
+    } else if ($cache_dir) {
+        $msg .= "<font color='green'>$cache_dir</font> directory is writable.";
+    } else {
+        $msg .= "<font color='red'>Bad configuration file</font> Directory used to store cache pages is not defined.";
+        $bad = 1;
+    }
+    $msg .= "</br>\n";
+
+    $msg .= "<h3>2. Database Connectivity</h3>\n";
+    $db_error = '';
+    if ( ($db_error = db_connect()) != "")
+    {
+        $msg .= "<font color='red'>$db_error</font><br/>";
+        $msg .= "Please alter <i>config.php</i> file with a proper database settings.<br/>This file is found in the application directory.<br/>";
+        $bad = 1;
+    } else {
+        $msg .= "Connection to <font color='green'>$db_name</font> established.<br/>\n";
+    }
+     
+    # check database structure
+    if (!$db_error)
+    {
+        $msg .= "<h3>3. Database Schema</h3>";
+        $q = "desc db_perm";
+        $result = @mysql_query($q);
+        $row = @mysql_fetch_array($result);
+        if (!$row)
+        {
+            $msg .= "<font color='red'>Tables not found.</font> ";
+            $msg .= "Please ensure that configuration database was created while installing greensql-fw package.<br/>";
+            $bad = 1;
+        } else {
+            $msg .= "<font color='green'>Table structure is ok.</font>";
+        }
+    }
+    $msg .= "<br/><br/><br/>";
+    $msg .= "If you are not able to resolve this problems, please check <a href='http://www.greensql.net/forum/1'>GreenSQL Support Forum.</a>";
+    if ($bad == 1)
+    {
+      print $msg;
+      exit;
+    }
 }
 
 function check_user($user, $pass)
@@ -446,19 +510,19 @@ function truncate_alerts()
     $result = mysql_query($q);
 }
 
-function read_log($file, $lines, $error)
+function read_log($file, $lines, &$error)
 {
     $fp = @fopen($file, "r");
     if (!$fp)
     {
         $error = "Failed to read log file.";
-	return;
+	return array();
     }
     $fsize = filesize($file);
     if ($fsize == 0)
     {
         fclose($fp);
-	return "";
+	return array("");
     }
     $p = $fsize - $lines * 1024;
     if ($p > 0)
