@@ -2,8 +2,7 @@
 
 require 'lib.php';
 require 'help.php';
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $proxy_id = 0;
 if (isset($_POST['proxyid']))
@@ -17,9 +16,6 @@ if (isset($_POST['dbname']))
 }
 $error = "";
 $msg = "";
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
 
 $smarty->assign("Name","Add Database");
 $smarty->assign("Page","db_add.tpl");

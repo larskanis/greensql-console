@@ -3,8 +3,7 @@
 require 'lib.php';
 require 'help.php';
 global $demo_version;
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $proxy_id = 0;
 if (isset($_GET['proxyid']))
@@ -13,9 +12,6 @@ if (isset($_GET['proxyid']))
 }
 $proxy = array();
 #print_r($_POST);
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
 
 if ($proxy_id && $proxy_id != 0)
 {

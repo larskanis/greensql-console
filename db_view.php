@@ -1,8 +1,7 @@
 <?
 
 require 'lib.php';
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $db_id = 0;
 if (isset($_GET['id']))
@@ -13,11 +12,6 @@ if ($db_id == 0)
 {
   $db_id = 1;
 }
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
-#$smarty->debugging = true;
-
 
 $dbs = get_databases();
 $db  = get_database($db_id);

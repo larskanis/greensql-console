@@ -2,20 +2,14 @@
 
 require 'lib.php';
 require 'help.php';
-
 global $demo_version;
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $userid = 0;
 if (isset($_SESSION['userid']))
 {
     $userid = intval($_SESSION['userid']);
 }
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
-#$smarty->debugging = true;
 
 $user = get_user($userid);
 $error = "";

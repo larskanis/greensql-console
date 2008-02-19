@@ -1,8 +1,7 @@
 <?php
 
 require 'lib.php';
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $error = "";
 $msg = "";
@@ -12,8 +11,6 @@ if (isset($_GET['agroupid']))
 {
     $agroupid = intval($_GET['agroupid']);
 }
-$smarty = new Smarty;
-$smarty->compile_check = true;
 
 $smarty->assign("Name","Vew Alert");
 $smarty->assign("Page","alert_view.tpl");

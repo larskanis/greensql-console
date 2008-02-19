@@ -1,5 +1,8 @@
 <?php
 
+# Application version.
+$greensql_console_ver = "0.3.2";
+
 #set default time zone - this prevents PHP5 from 
 #showing strange warning messages
 date_default_timezone_set("America/Los_Angeles");

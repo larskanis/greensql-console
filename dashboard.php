@@ -1,14 +1,10 @@
 <?php
 
 require 'lib.php';
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $error = "";
 $msg = "";
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
 
 $smarty->assign("Name","Dashboard");
 $smarty->assign("Page","dashboard.tpl");

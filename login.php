@@ -5,16 +5,12 @@ $_SESSION['login'] = 1;
 
 require 'lib.php';
 global $demo_version;
+global $smarty;
 
 $_SESSION['login'] = "";
 
-require 'libs/Smarty.class.php';
 $error = "";
 $msg = "";
-$lines = 200;
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
 
 if (isset($_POST['login']) && isset($_POST['user']) && isset($_POST['pass']))
 {

@@ -22,4 +22,8 @@ $log_file = "/var/log/greensql.log";
 
 # Number of lines to show when viewing log file.
 $num_log_lines = 200;
+
+# Generated web pages cache
+$cache_dir = "templates_c";
+
 ?>

@@ -2,8 +2,7 @@
 
 require 'lib.php';
 require 'help.php';
-
-require 'libs/Smarty.class.php';
+global $smarty;
 
 $error = "";
 $msg = "";
@@ -19,9 +18,6 @@ if (isset($_GET['p']))
     $start_id = intval($_GET['p']);
 }
 $limit_per_page = 10;
-
-$smarty = new Smarty;
-$smarty->compile_check = true;
 
 if ($status == 1)
 {
