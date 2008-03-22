@@ -23,7 +23,7 @@
 <td>{$alerts[sec2].update_time}</td>
 <td>{$alerts[sec2].proxyname}</td>
 <td>{$alerts[sec2].db_name}</td>
-<td><a href="alert_view.php?agroupid={$alerts[sec2].agroupid}">{$alerts[sec2].short_pattern}</a></td>
+<td><a href="alert_view.php?agroupid={$alerts[sec2].agroupid}&{$TokenName}={$TokenID}">{$alerts[sec2].short_pattern}</a></td>
 </tr>
 {/section}
 
