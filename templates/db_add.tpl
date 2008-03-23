@@ -4,8 +4,8 @@
 <h3>Databases</h3>
 {section name=sec1 loop=$databases}
 <strong>{$databases[sec1].name}</strong>&nbsp;
-<a href="db_view.php?id={$databases[sec1].id}">view</a>&nbsp;-&nbsp;
-<a href="db_edit.php?id={$databases[sec1].id}">edit</a>
+<a href="db_view.php?id={$databases[sec1].id}&{$TokenName}={$TokenID}">view</a>&nbsp;-&nbsp;
+<a href="db_edit.php?id={$databases[sec1].id}&{$TokenName}={$TokenID}">edit</a>
 <br/>
 {/section}
 <h3>Add new database</h3>
@@ -13,6 +13,7 @@
 <pre>{$msg}</pre>
 {/if }
 <form method="POST">
+<input type="hidden" name="{$TokenName}" value="{$TokenID}">
 <table cellspacing=0 cellpadding=0>
 <tr>
  <td>Database name:</td>
@@ -37,3 +38,4 @@
 </tr>
 
 </table>  
+</form>

@@ -6,7 +6,7 @@ Frontend: {$DB_Listener}<br/>
 Backend:  {$DB_Backend}<br/>
 Status:   {$DB_Status}<br/>
 Type:     {$DB_Type}<br/>
-<a href="proxy_add.php?proxyid={$DB_ProxyID}">Change listener settings</a><br/>
+<a href="proxy_add.php?proxyid={$DB_ProxyID}&{$TokenName}={$TokenID}">Change listener settings</a><br/>
 <br/>
 <br/>
 { /if }
@@ -16,4 +16,4 @@ Create command: {$DB_Create}<br/>
 Disclose table stucture: {$DB_Info}<br/>
 Drop command:  {$DB_Drop}<br/>
 Other sensitive commands: {$DB_BlockQ}<br/>
-<a href="db_edit.php?id={$DB_ID}">Change database settings</a><br/>
+<a href="db_edit.php?id={$DB_ID}&{$TokenName}={$TokenID}">Change database settings</a><br/>

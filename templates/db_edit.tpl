@@ -3,6 +3,7 @@
 <pre>{$msg}</pre>
 {/if }
 <form method="POST">
+<input type="hidden" name="{$TokenName}" value="{$TokenID}">
 
 { if ! $DB_ProxyID }
 <input type=hidden name="proxyid" value="0">
