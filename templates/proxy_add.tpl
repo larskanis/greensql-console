@@ -4,7 +4,7 @@
 <h3>GreenSQL Listeners</h3>
 {section name=sec1 loop=$proxies}
 <strong>{$proxies[sec1].proxyname}</strong>&nbsp;
-<a href="proxy_add.php?proxyid={$proxies[sec1].proxyid}">edit</a>
+<a href="proxy_add.php?proxyid={$proxies[sec1].proxyid}&{$TokenName}={$TokenID}">edit</a>
 <br/>
 {/section}
 
@@ -15,6 +15,7 @@
 {/if }
 
 <form method="POST">
+<input type="hidden" name="{$TokenName}" value="{$TokenID}">
 <table cellspacing=0 cellpadding=0>
 <tr>
  <td>Listener name:</td>
@@ -55,6 +56,3 @@
 </table>
 <input type="hidden" name="proxyid" value="{$PROXY_ID}"></input>
 </form>
-{if $HelpPage}
-{include file="$HelpPage"}
-{/if}

@@ -9,6 +9,7 @@
 <font color="#00e000"><h3 align="center">{$Name}</h3></font>
 
 <form method="POST">
+<input type="hidden" name="{$TokenName}" value="{$TokenID}">
 <table cellspacing=0 cellpadding=0 align="center">
 
 {if $demo }
