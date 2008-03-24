@@ -18,7 +18,7 @@
 <tr bgcolor={$alerts[sec2].color}>
 <td>{$alerts[sec2].event_time}</td>
 <td>{$alerts[sec2].db_name}</td>
-<td><a href="alert_view.php?agroupid={$alerts[sec2].agroupid}">{$alerts[sec2].short_query}</a></td>
+<td><a href="alert_view.php?agroupid={$alerts[sec2].agroupid}&{$TokenName}={$TokenID}">{$alerts[sec2].short_query}</a></td>
 <td>{$alerts[sec2].block_str}</td>
 </tr>
 {/section}
