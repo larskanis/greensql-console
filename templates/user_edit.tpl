@@ -7,6 +7,7 @@
 {/if }
 
 <form method="POST">
+<input type="hidden" name="{$TokenName}" value="{$TokenID}">
 <table cellspacing=0 cellpadding=0>
 <tr>
  <td>User:</td>
