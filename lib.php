@@ -7,6 +7,7 @@ $greensql_console_ver = "0.3.2";
 #showing strange warning messages
 date_default_timezone_set("America/Los_Angeles");
 
+# do not start session if it was started in login.php file
 if (!(isset($_SESSION['login']) && $_SESSION['login'] == 1))
 {
     session_start();
@@ -30,11 +31,41 @@ $smarty->compile_dir = $cache_dir;
 #    die( $error);
 #}
 
+# check if we came not from the login page and ceck if user is in session
+# otherwise - user is not loged in
 if (isset($_SESSION['login']) && $_SESSION['login'] != 1 && !isset($_SESSION['user']))
 {
     header("location: login.php");
     exit;
 }
+
+# we are logged in - check the token
+$good_token = 0;
+$tokenname= "token";
+if (isset($_SESSION[$tokenname]) && isset($_REQUEST[$tokenname]) )
+{
+    if ($_SESSION[$tokenname] != "" && $_SESSION[$tokenname] == $_REQUEST[$tokenname])
+    {
+        $good_token = 1;
+    }
+}
+#if we came from login page, do not check the token
+if (isset($_SESSION['login']) && $_SESSION['login'] == 1)
+{
+    $good_token = 1;
+}
+if ($good_token == 0)
+{
+    header("location: login.php");
+    exit;
+}
+
+#denerate next token
+#a token will be changed every hour
+$tokenid = md5($_SESSION['user'].date("G j-m-Y").session_id());
+$smarty->assign("TokenName", $tokenname);
+$smarty->assign("TokenID", $tokenid );
+$_SESSION[$tokenname] = $tokenid;
 
 function db_connect()
 {
