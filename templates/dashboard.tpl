@@ -1,14 +1,14 @@
 <h3>{$Name}</h3>
 { if $NUM_Dbs == 1 }
-You can start by creating your first database <a href="db_add.php">here</a>.
+You can start by creating your first database <a href="db_add.php?{$TokenName}={$TokenID}">here</a>.
 <br/>
 <br/>
-You can alter default listener settings <a href="proxy_add.php?proxyid=1">here</a>.
+You can alter default listener settings <a href="proxy_add.php?proxyid=1&{$TokenName}={$TokenID}">here</a>.
 <br/>
 <br/>
 { /if }
 { if $def_pwd == 1 }
-Please change default password <a href="user_edit.php">here</a>.
+Please change default password <a href="user_edit.php?{$TokenName}={$TokenID}">here</a>.
 <br/>
 <br/>
 { /if }
@@ -27,7 +27,7 @@ Number of databases : {$NUM_Dbs}<br/>
 <tr bgcolor={$alerts[sec2].color}>
 <td>{$alerts[sec2].event_time}</td>
 <td>{$alerts[sec2].db_name}</td>
-<td><a href="alert_view.php?agroupid={$alerts[sec2].agroupid}">{$alerts[sec2].short_query}</a></td>
+<td><a href="alert_view.php?agroupid={$alerts[sec2].agroupid}&{$TokenName}={$TokenID}">{$alerts[sec2].short_query}</a></td>
 <td>{$alerts[sec2].block_str}</td>
 </tr>
 {/section}
@@ -35,5 +35,5 @@ Number of databases : {$NUM_Dbs}<br/>
 </table>
 <br/>
 { if $NUM_Alers > 10 }
-<center><a href="rawalert_list.php?p=1">More</a></center>
+<center><a href="rawalert_list.php?p=1&{$TokenName}={$TokenID}">More</a></center>
 { /if }
