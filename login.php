@@ -19,9 +19,11 @@ if (isset($_POST['login']) && isset($_POST['user']) && isset($_POST['pass']))
     $pass = sha1($pass);
     if ($u = check_user($user, $pass))
     {
+        global $tokenid;
+        global $tokenname;
         $_SESSION['userid']= $u['userid'];
         $_SESSION['user'] = $user;
-	header("location: dashboard.php");
+	header("location: dashboard.php?$tokenname=$tokenid");
 	exit;
     } else {
         $error = "Bad username/password.";
