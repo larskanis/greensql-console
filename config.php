@@ -3,6 +3,9 @@
 # Uncomment the following line to switch to demo version
 #$demo_version = 1;
 
+# greensql version
+$version = "0.3.3";
+
 # MySQL Database IP address
 $db_host = "127.0.0.1";
 
