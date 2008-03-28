@@ -15,10 +15,10 @@ Application Installation
 
 1. Greensql-firewall configuration db
 
-Please read the follow instructions located in greensql-mysql-db.txt
-if greensql-fw configuration database was not installed in automatic
-manner. This file "greensql-mysql-db.txt" is a part of the greensql-fw
-package.
+If GreenSQL configuration database was not installed together
+with greensql-fw package, check "greensql-mysql-db.txt" file 
+found in the the package. Tis file all commands required to
+configure the database.
 
 2. Alter configuration settings
 
