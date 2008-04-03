@@ -26,7 +26,9 @@ $smarty->assign("alerts", $alerts);
 $numResults = get_num_raw_alerts($status);
 $list_pages = "";
 
-  $file = 'rawalert_list.php';
+global $tokenid;
+global $tokenname;
+  $file = "rawalert_list.php?$tokenname=$tokenid";
   // update list of pages
   $num_pages = ceil($numResults/$limit_per_page)+1;
   if ($start_id > 2)
@@ -36,7 +38,7 @@ $list_pages = "";
   $to_id = $from_id + 5;
 
   if ($start_id > 1)
-    $list_pages .= '<a href="'.$file.'?p='.($start_id-1).'">Previous</a>&nbsp;';
+    $list_pages .= '<a href="'.$file.'&p='.($start_id-1).'">Previous</a>&nbsp;';
   else if ($start_id == 1)
     $list_pages .= '<a href="'.$file.'">Previous</a>&nbsp;';
     
@@ -45,10 +47,10 @@ $list_pages = "";
     if (($i-1) == $start_id)
       $list_pages .= '<b>'.$i . '</b>&nbsp;';
     else
-      $list_pages .= '<a href="'.$file.'?p='.($i-1).'">'.$i.'</a>&nbsp;';
+      $list_pages .= '<a href="'.$file.'&p='.($i-1).'">'.$i.'</a>&nbsp;';
   }
   if ($start_id < $num_pages-2)
-    $list_pages .= '<a href="'.$file.'?p='.($start_id+1).'">Next</a>&nbsp;';
+    $list_pages .= '<a href="'.$file.'&p='.($start_id+1).'">Next</a>&nbsp;';
   $list_pages .= '<br/>';
 
 $smarty->assign("pager", $list_pages);
