@@ -260,7 +260,7 @@ function add_proxy($proxy)
     if ($row)
         return "Failed to add new proxy, same frontend ip and port already used.";
     $q = "INSERT into proxy (proxyname, frontend_ip, frontend_port, ".
-    "backend_server, backend_ip, backend_port, dbtype, state) VALUES (".
+    "backend_server, backend_ip, backend_port, dbtype, status) VALUES (".
     "'".$proxy['proxyname']."', ".
     "INET_ATON('".$proxy['frontend_ip']."'), ".
     $proxy['frontend_port'].", ".
