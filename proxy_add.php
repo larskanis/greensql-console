@@ -24,12 +24,12 @@ $error = "";
 if (isset($_POST['submit']))
 {
     #data posted, db need to be updated
-    $proxy['frontend_ip']    = trim($_POST['frontend_ip']);
+    $proxy['frontend_ip']    = trim(htmlspecialchars($_POST['frontend_ip']));
     $proxy['frontend_port']  = intval(trim($_POST['frontend_port']));
-    $proxy['backend_server'] = trim($_POST['backend_server']);
-    $proxy['backend_ip']     = trim($_POST['backend_ip']);
+    $proxy['backend_server'] = trim(htmlspecialchars($_POST['backend_server']));
+    $proxy['backend_ip']     = trim(htmlspecialchars($_POST['backend_ip']));
     $proxy['backend_port']   = intval(trim($_POST['backend_port']));
-    $proxy['proxyname']      = trim($_POST['proxyname']);
+    $proxy['proxyname']      = trim(htmlspecialchars($_POST['proxyname']));
     $proxy['proxyid']        = intval(trim($_POST['proxyid']));
     #print_r($proxy);
 
