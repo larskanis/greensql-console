@@ -32,7 +32,7 @@ if (isset($_POST['submit']))
     $oldpass = sha1(trim($_POST['oldpass']));
     if ($user['pwd'] != $oldpass)
     {
-        $error .= "Old password is wrong. Please retype.<br/>$oldpass - ".$_POST['oldpass']."\n";
+        $error .= "Old password is wrong. Please retype.<br/>\n";
     }
     $pass = trim($_POST['pass']);
     $pass2 = trim($_POST['pass2']);
