@@ -55,7 +55,7 @@ if (isset($_POST['submit']))
     }
     if (!ereg("^[a-zA-Z0-9_]+$",$db['db_name']))
     {
-        $error = "Database Name is invalid. It contains illegal chars.";
+        $error = "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.";
     }
     if (strlen($db['db_name']) > 20)
     {
@@ -70,7 +70,7 @@ if (isset($_POST['submit']))
         $error = update_database($db);
 	if (!$error)
 	{
-	    $msg = "Database has been succesfully updated.";
+	    $msg = "Database has been successfully updated.";
 	}
     }
     if ($error)
