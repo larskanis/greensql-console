@@ -24,7 +24,7 @@ if ($proxy_id && $db_name)
 {
     if (!ereg("^[a-zA-Z0-9_]+$",$db_name))
     {
-        $error = "Database Name is invalid. It contains illegal chars.";
+        $error = "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.";
     }
     if (!$error)
     {
@@ -34,7 +34,7 @@ if ($proxy_id && $db_name)
     {
         $msg = "<font color='red'>$error</font>";
     } else {
-        $msg = "Object has been created sucsesfully";
+        $msg = "Object has been created successfully.";
     }
     $smarty->assign("msg", $msg);
 }
