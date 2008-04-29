@@ -33,28 +33,53 @@ if (isset($_POST['submit']))
     $proxy['proxyid']        = intval(trim($_POST['proxyid']));
     #print_r($proxy);
 
-    if (strlen($proxy['backend_ip']) == 0 ||
-        ip2long($proxy['backend_ip']) == -1)
+    if (strlen($proxy['proxyname']) == 0)
     {
-        $error = "Wrong format of the ip address (backend ip).<br/>";
+        $error .= "Listener Name is empty.<br/>\n";
     }
-    if (strlen($proxy['frontend_ip']) == 0 ||
-        ip2long($proxy['frontend_ip']) == -1)
+    else if (!ereg("^[a-zA-Z0-9_\.\ ]+$", $proxy['proxyname']))
     {
-        $error = "Wrong format of the ip address (frontend ip).<br/>";
+        $error .= "Listener Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', ' ' and '.'.<br/>\n";
     }
 
-    if ($proxy['frontend_port'] == 0 ||
-        strlen($proxy['backend_server']) == 0 ||
-	$proxy['backend_port'] == 9 ||
-	strlen($proxy['proxyname']) == 0)
+    if (strlen($proxy['backend_server']) == 0)
     {
-        $error .= "Some fields are not correct.";
+        $error .= "Backend ServerName is empty.<br/>\n";
+    }
+    else if (!ereg("^[a-zA-Z0-9_\.]+$", $proxy['backend_server']))
+    {
+        $error .= "Backend Server Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_' and '.'.<br/>\n";
+    }
+
+    if (strlen($proxy['backend_ip']) == 0)
+    {
+        $error .= "Backend IP is empty.<br/>\n";
+    } else if (ip2long($proxy['backend_ip']) == -1)
+    {
+        $error .= "Backend IP has wrong IP address format.<br/>\n";
+    }
+    if ($proxy['backend_port'] == 0)
+    {
+        $error .= "Backend Port can not be empty.<br/>\n";
+        $proxy['backend_port'] = '';
+    }
+
+    if (strlen($proxy['frontend_ip']) == 0)
+    {
+        $error .= "Frontend IP is empty.<br/>\n";
+    } else if (ip2long($proxy['frontend_ip']) == -1)
+    {
+        $error .= "Frontend IP has wrong IP address format.<br/>\n";
+    }
+    if ($proxy['frontend_port'] == 0)
+    {
+        $error .= "Frontend Port can not be empty.<br/>\n";
+        $proxy['frontend_port'] = '';
     }
 
     if ($demo_version)
     {
-        $error = "You can not change proxy objects in demo version.";
+        $error .= "You can not change proxy objects in demo version.<br/>\n";
     }
     else if ($error == "" && !$proxy['proxyid'] )
     {
