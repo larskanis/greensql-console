@@ -15,8 +15,8 @@
  <td><input type=string name="db_name" value="{$DB_Name}"></input></td>
 </tr>
 
-<tr><td colspan=2>&nbsp;</td></tr>
 { if $DB_ProxyID }
+<tr><td colspan=2>&nbsp;</td></t
 <tr>
  <td>GreenSQL Listener:</td>
  <td>
@@ -25,8 +25,23 @@
  </select>
  </td>
 </tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr>
+ <td>Blocking Mode:</td>
+ <td>
+ <select name=block_mode>
+ {html_options values=$block_values selected=$block_selected output=$block_output}
+ </select>
+ </td>
+</tr>
+{ else }
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr>
+ <td>Blocking Mode:</td>
+ <td>Block based on Risk</td>
+</tr>
 { /if }
-<tr><td colspan=2><br><strong>Change Permissions</strong><br/></td></tr>
+<tr><td colspan=2><br><strong>Privileged Operations</strong><br/></td></tr>
 
 <tr>
  <td>Change DB Structure:</td>
