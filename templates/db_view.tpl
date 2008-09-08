@@ -10,7 +10,9 @@ Type:     {$DB_Type}<br/>
 <br/>
 <br/>
 { /if }
-<strong>Database permissions:</strong><br/>
+<strong>Blocking Setting:</strong><br/>
+{$DB_BlockStatus}<br/><br/>
+<strong>Privileged Operations:</strong><br/>
 Change database structure: {$DB_Alter}<br/>
 Create command: {$DB_Create}<br/>
 Disclose table stucture: {$DB_Info}<br/>
