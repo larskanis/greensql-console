@@ -1,10 +1,16 @@
 A:link {text-decoration: none; color: #00cc00; }
 A:visited {text-decoration: none; color: #000000;}
 A:hover {text-decoration: underline; }
+pre {
+border: 1px dotted;
+background: #ffe9e9;
+padding: 10px;
+}
+
 table {
  border-width:1px;
  border-style: hidden;
-border-collapse: collapse;
+ border-collapse: collapse;
 }
 table td {
  border-width:1px;
@@ -19,6 +25,7 @@ table td {
  display: none;
  float:left;
  margin-bottom: 10px;
+ width: 99%;
 }
 #help_content h3 {
  margin: 0px;
