@@ -185,10 +185,11 @@ function get_database($dbid)
 {
     $dbid = intval($dbid);
     $q = "SELECT db_name, INET_NTOA(frontend_ip) as 'frontend_ip', ".
-         "frontend_port, dbtype, status, proxyname, db_perm.proxyid, ".
+         "frontend_port, dbtype, proxy.status as 'proxy_stataus',".
+         "proxyname, db_perm.proxyid, ".
          "backend_server, backend_port, ".
 	 "INET_NTOA(backend_ip) as 'backend_ip', ".
-	 "create_perm, drop_perm, alter_perm, info_perm, block_q_perm ".
+	 "perms, perms2, db_perm.status as 'status', status_changed ".
          "FROM db_perm left join proxy USING (proxyid) ".
 	 "WHERE dbpid=$dbid ";
     $result = mysql_query($q);
@@ -197,6 +198,11 @@ function get_database($dbid)
         return $row;
     $row['listener'] = $row['frontend_ip'].":".$row['frontend_port'];
     $row['backend'] = $row['backend_server'].":".$row['backend_port'];
+    $row['alter_perm']  = ($row['perms'] & 4) ? 1 : 0;
+    $row['create_perm'] = ($row['perms'] & 1) ? 1 : 0;
+    $row['drop_perm']   = ($row['perms'] & 2) ? 1 : 0;
+    $row['info_perm']   = ($row['perms'] & 8) ? 1 : 0;
+    $row['block_q_perm']= ($row['perms'] & 16)? 1 : 0;
     return $row;
 }
 
@@ -224,11 +230,9 @@ function update_database($db)
     $q = "UPDATE db_perm SET ".
     "proxyid=".$db['proxyid'].", ".
     "db_name='".$db['db_name']."', ".
-    "create_perm=".$db['create_perm'].", ".
-    "drop_perm=".$db['drop_perm'].", ".
-    "alter_perm=".$db['alter_perm'].", ".
-    "info_perm=".$db['info_perm'].", ".
-    "block_q_perm=".$db['block_q_perm']." ".
+    "perms=".$db['perms'].", ".
+    "status=".$db['status'].", ".
+    "status_changed=now() ".
     "WHERE dbpid=".$db['dbpid'];
     $result = mysql_query($q); 
 }
@@ -424,6 +428,12 @@ function get_raw_alerts($agroupid)
 	} else if ($row['block'] == 0)
 	{
 	    $row['block_str'] = "<font color='orange'>warning</font>";
+        } else if ($row['block'] == 2)
+        {
+            $row['block_str'] = "<font color='red'>high risk</font>";
+        } else if ($row['block'] == 3)
+        {
+            $row['block_str'] = "<font color='black'>low</font>";
 	} else {
 	    $row['block_str'] = "unknown";
 	}
@@ -464,6 +474,14 @@ function get_raw_alerts_bypage($from, $count, $status)
         {
             $row['block_str'] = "<font color='orange'>warning</font>";
 	    $row['color'] = "#ffffe0"; # a light orange
+        } else if ($row['block'] == 2)
+        {
+            $row['block_str'] = "<font color='red'>high risk</font>";
+            $row['color'] = "#ffffe0"; # a light orange
+        } else if ($row['block'] == 3)
+        {
+            $row['block_str'] = "low";
+            $row['color'] = "#f9f9f9"; # a light grey
         } else {
             $row['block_str'] = "unknown";
 	    $row['color'] = "#f9f9f9"; # a light grey
