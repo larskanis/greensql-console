@@ -8,7 +8,7 @@
 <body>
 <font color="#00e000"><h3 align="center">{$Name}</h3></font>
 
-<form method="POST">
+<form method="POST" action="login.php">
 <input type="hidden" name="{$TokenName}" value="{$TokenID}">
 <table cellspacing=0 cellpadding=0 align="center">
 
