@@ -54,7 +54,7 @@ $smarty->assign("AGROUP_pattern", $alert['pattern']);
 $smarty->assign("AGROUP_status", intval($alert['status']));
 $smarty->assign("AGROUP_bad", $bad);
 
-$alerts = get_raw_alerts($agroupid);
+$alerts = get_raw_alerts_with_limit($agroupid, 20);
 $smarty->assign("alerts", $alerts);
 
 $smarty->display('index.tpl');
