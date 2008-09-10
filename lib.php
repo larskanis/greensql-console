@@ -409,11 +409,11 @@ function get_alert($agroupid)
     return $row;
 }
 
-function get_raw_alerts($agroupid)
+function get_raw_alerts_with_limit($agroupid, $limit)
 {
     $agroupid=intval($agroupid);
     $q = "SELECT * FROM alert WHERE agroupid=$agroupid ".
-         "ORDER BY event_time DESC";
+         "ORDER BY event_time DESC LIMIT $limit";
     $result = mysql_query($q);
 
     $alerts = array();
