@@ -1,6 +1,8 @@
 <?
 
 require 'lib.php';
+global $demo_version;
+
 global $smarty;
 
 $db_id = 0;
@@ -26,66 +28,74 @@ if (isset($_POST['submit']))
     $db['info_perm']   = intval(trim($_POST['info_perm']));
     $db['block_q_perm']= intval(trim($_POST['block_q_perm']));
     $db['proxyid']     = intval(trim($_POST['proxyid']));
-    $db['status']      = intval(trim($_POST['block_mode']));
-    $db['db_name']     = trim($_POST['db_name']); 
+    $block_mode        = intval(trim($_POST['block_mode']));
+    $db['db_name']     = trim(htmlspecialchars($_POST['db_name'])); 
     $db['dbpid']       = $db_id;
     $db['perms']       = 0;
     
     if ($_POST['proxyid'] != 0 && !($proxy = get_proxy($db['proxyid'])))
     {
-        $error .= "Wrong proxy id. Proxy was not found in the database.";
+        $error .= "Wrong proxy id. Proxy was not found in the database.<br/>\n";
     }
 
     if ($db['create_perm'] != 0 && $db['create_perm'] != 1)
     {
-        $error .= "Create table permission is invalid.";
+        $error .= "Create table permission is invalid.<br/>\n";
     } else if ($db['create_perm'] == 1) {
         $db['perms'] = $db['perms'] | 1;
     }
 
     if ($db['drop_perm'] != 0 && $db['drop_perm'] != 1)
     {
-        $error .= "Drop permission is invalid.";
+        $error .= "Drop permission is invalid.<br/>\n";
     } else if ($db['drop_perm'] == 1) {
         $db['perms'] = $db['perms'] | 2;
     }
 
     if ($db['alter_perm'] != 0 && $db['alter_perm']  != 1)
     {
-        $error = "Change table structure permission is invalid.";
+        $error = "Change table structure permission is invalid.<br/>\n";
     } else if ($db['alter_perm'] == 1) {
         $db['perms'] = $db['perms'] | 4;
     }
 
     if ($db['info_perm'] != 0 && $db['info_perm'] != 1)
     {
-        $error = "Disclose table structure permission is invalid.";
+        $error .= "Disclose table structure permission is invalid.<br/>\n";
     } else if ($db['info_perm'] == 1) {
         $db['perms'] = $db['perms'] | 8;
     }
 
     if ($db['block_q_perm'] != 0 && $db['block_q_perm'] != 1)
     {
-        $error = "Block sensitive queries permission is invalid.";
+        $error .= "Block sensitive queries permission is invalid.<br/>\n";
     } else if ($db['block_q_perm'] == 1) {
         $db['perms'] = $db['perms'] | 16;
     }
 
-    if ($db['status'] > 13 || $db['status'] < 0)
+    if ($block_mode > 13 || $block_mode < 0)
     {
-        $error = "Block Status value is invalid.";
+        $error .= "Block Status value is invalid.<br/>\n";
     }
-    if (!ereg("^[a-zA-Z0-9_]+$",$db['db_name']))
-    {
-        $error = "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.";
-    }
+
     if (strlen($db['db_name']) > 20)
     {
-        $error = "Database name is too long.";
+        $error .= "Database name is too long.<br/>\n";
     }
+
     if (strlen($db['db_name']) == 0)
     {
-       $error = "Database name could not be empty.";
+       $error .= "Database name can not be empty.<br/>\n";
+    } else if (!ereg("^[a-zA-Z0-9_]+$",$db['db_name']))
+    {
+        $error .= "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
+    }
+
+    if ($block_status != $db['status'] && $demo_version)
+    {
+       $error .= "Blocking status can not be changed in demo version.<br/>\n";
+    } else {
+       $db['status'] = $block_mode;
     }
     # default database - do not change it's status
     if ($db['proxyid'] == 0)
