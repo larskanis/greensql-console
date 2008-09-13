@@ -2,6 +2,7 @@
 
 require 'lib.php';
 global $smarty;
+global $demo_version;
 
 $error = "";
 $msg = "";
@@ -20,14 +21,26 @@ $alert = get_alert($agroupid);
 
 if (isset($_POST['action']) && $_POST['action'] == "approve" && $agroupid)
 {
-    if ($_POST['submit'] == "Ingore this query")
+
+    if ($demo_version)
     {
-        ignore_alert($agroupid);
-        $alert['status'] = 2;
-    } elseif ($_POST['submit'] == "Allow this query") {
-        approve_alert($agroupid,$alert);
-        $alert['status'] = 1;
+        $error .= "You can not change alert status in demo mode.<br/>\n";
     }
+
+    if ($error)
+    {
+        $msg = "<font color='red'>$error</font>";
+    } else {
+        if ($_POST['submit'] == "Ingore this query")
+        {
+            ignore_alert($agroupid);
+            $alert['status'] = 2;
+        } elseif ($_POST['submit'] == "Allow this query") {
+            approve_alert($agroupid,$alert);
+            $alert['status'] = 1;
+        }
+    }
+    $smarty->assign("msg", $msg);
 }
 #check if this query has bad format
 if (strstr($alert['pattern'], "??") !== FALSE)
