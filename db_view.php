@@ -31,7 +31,7 @@ $smarty->assign("DB_ID", $db_id);
 $enabled_str = "<font color=\"red\">enabled</font>";
 
 $smarty->assign("DB_StatusId", $db['proxy_status']);
-if ($db['status'] == 1)
+if ($db['proxy_status'] == 1)
 {
     $smarty->assign("DB_Status", "<font color=\"green\">Listener is 'OK'</font>");
 } else if ($db) {
