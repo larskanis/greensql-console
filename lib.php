@@ -185,7 +185,7 @@ function get_database($dbid)
 {
     $dbid = intval($dbid);
     $q = "SELECT db_name, INET_NTOA(frontend_ip) as 'frontend_ip', ".
-         "frontend_port, dbtype, proxy.status as 'proxy_stataus',".
+         "frontend_port, dbtype, proxy.status as 'proxy_status',".
          "proxyname, db_perm.proxyid, ".
          "backend_server, backend_port, ".
 	 "INET_NTOA(backend_ip) as 'backend_ip', ".
