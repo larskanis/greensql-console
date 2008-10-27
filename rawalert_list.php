@@ -9,7 +9,7 @@ $msg = "";
 $start_id = 0;
 if (isset($_GET['p']))
 {
-    $start_id = intval($_GET['p']);
+    $start_id = abs(intval($_GET['p']));
 }
 $limit_per_page = 10;
 
