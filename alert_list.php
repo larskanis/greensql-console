@@ -7,7 +7,7 @@ global $smarty;
 $error = "";
 $msg = "";
 
-$status = intval($_GET['status']);
+$status = abs(intval($_GET['status']));
 if (!$status)
 {
     $status = 0;
@@ -15,7 +15,7 @@ if (!$status)
 $start_id = 0;
 if (isset($_GET['p']))
 {
-    $start_id = intval($_GET['p']);
+    $start_id = abs(intval($_GET['p']));
 }
 $limit_per_page = 10;
 
@@ -31,7 +31,7 @@ $dbs = get_databases();
 $smarty->assign("databases", $dbs);
 $smarty->assign("status", $status);
 
-$alerts = get_alerts_bypage($start_id,$limit_per_page,$status);
+$alerts = get_alerts_bypage($start_id*$limit_per_page,$limit_per_page,$status);
 $smarty->assign("alerts", $alerts);
 
 $numResults = get_num_alerts($status);
@@ -40,6 +40,7 @@ $list_pages = "";
 
 global $tokenid;
 global $tokenname;
+
   $file = "alert_list.php?status=$status&$tokenname=$tokenid";
   // update list of pages
   $num_pages = ceil($numResults/$limit_per_page)+1;
