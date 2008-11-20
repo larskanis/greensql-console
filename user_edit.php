@@ -1,4 +1,4 @@
-<?
+<?php
 
 require 'lib.php';
 require 'help.php';

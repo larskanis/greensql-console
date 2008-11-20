@@ -1,4 +1,4 @@
-<?
+<?php
 
 require 'lib.php';
 global $demo_version;

@@ -1,4 +1,4 @@
-<?
+<?php
 
 # Uncomment the following line to switch to demo version
 #$demo_version = 1;
