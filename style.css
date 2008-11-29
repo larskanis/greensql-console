@@ -30,6 +30,9 @@ table td {
 #help_content h3 {
  margin: 0px;
 }
+h4 {
+ margin-bottom: 4px;
+}
 #help_text {
  float: left;
   margin: 0px 10px 10px 10px;
