@@ -465,6 +465,7 @@ function get_raw_alerts_bypage($from, $count, $status)
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
+        $row['description'] = join("; ", split("\n", $row['reason']));
         $row['reason'] = str_replace("\n", "<br/>\n", $row['reason']);
         if ($row['block'] == 1)
         {
@@ -487,6 +488,12 @@ function get_raw_alerts_bypage($from, $count, $status)
 	    $row['color'] = "#f9f9f9"; # a light grey
         }
 
+        if (strlen($row['description']) > 120)
+        {
+            $row['short_description'] = substr($row['description'], 0, 100)."...";
+        } else {
+            $row['short_description'] = $row['description'];
+        }
         if (strlen($row['query']) > 85)
         {
             $row['short_query'] = htmlspecialchars(substr($row['query'], 0, 80)."...");
@@ -590,6 +597,7 @@ function read_log($file, $lines, &$error)
 	$str .= "<br/>\n";
 	$data[] = $str;
     }
+    @fclose($fp);
     $num = count($data) - $lines-1;
     if ($num < 0)
     {
@@ -601,6 +609,37 @@ function read_log($file, $lines, &$error)
 	$num--;
     }
     return array_reverse($data);
+}
+
+function get_news()
+{
+    global $cache_dir;
+    $file = $cache_dir . DIRECTORY_SEPARATOR . "news.txt";
+    $fp = @fopen($file, "r");
+    if (!$fp)
+    {
+        error_log("GreenSQL Console: failed to read news file $file");
+        return array();
+    }
+    $fsize = filesize($file);
+    if ($fsize == 0)
+    {
+        fclose($fp);
+        return array("");
+    }
+    $data = array();
+    $row = array();
+    for ($i = 0; $i < 4 && !feof($fp); $i++)
+    {
+        $str = fgets($fp);
+        $str = chop($str);
+        $str = htmlspecialchars($str);
+        $row = explode("|", $str);
+        $data[] = array("date" => $row[0], "title" => $row[1],
+                       "link" => $row[2]);
+    }
+    @fclose($fp);
+    return $data;
 }
 
 ?>
