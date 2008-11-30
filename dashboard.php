@@ -31,6 +31,9 @@ $status = 0;
 $alerts = get_raw_alerts_bypage(0, 10, $status);
 $smarty->assign("alerts", $alerts);
 
+$news = get_news();
+$smarty->assign("news", $news);
+
 $smarty->display('index.tpl');
 
 ?>
