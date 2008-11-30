@@ -642,4 +642,43 @@ function get_news()
     return $data;
 }
 
+function exec_php_file($app)
+{
+  #print "check fork\n";
+  if (function_exists('pcntl_fork'))
+  {
+    #print "forking";
+    $pid = pcntl_fork();
+    if ($pid == 0)
+    {
+      include_once($app);
+      exit;
+    }
+    return;
+  }
+  if (exec("php $app >/dev/null &") !== FALSE)
+  {
+    return;
+  }
+  $out = "";
+  $ret = "";
+  if (exec('start /B "window_name" "php $app"',$out,$ret) !== FALSE)
+  {
+    return;
+  }
+  if (class_exists("COM"))
+  {
+    $WshShell = new COM("WScript.Shell");
+    if ($WshShell)
+    {
+      $oExec = $WshShell->Run($app, 0, false);
+      $WshShell->Release();
+      return;
+    }
+  }
+
+  #if we fail to start $app in the background, include it now.
+  #include_once($app);
+}
+
 ?>
