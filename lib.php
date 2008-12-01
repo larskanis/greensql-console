@@ -656,13 +656,24 @@ function exec_php_file($app)
     }
     return;
   }
-  if (exec("php $app >/dev/null &") !== FALSE)
+  // check if we are in unix like os
+  if (file_exists("/dev/null") )
   {
-    return;
+    if (file_exists("/usr/bin/php"))
+    {
+      if (exec("/usr/bin/php $app >/dev/null &") !== FALSE)
+      {
+        return;
+      }
+    } else if (exec("php $app >/dev/null &") !== FALSE)
+    {
+      return;
+    }
   }
+  // few variants for windows
   $out = "";
   $ret = "";
-  if (exec('start /B "window_name" "php $app"',$out,$ret) !== FALSE)
+  if (exec('start /B php $app',$out,$ret) !== FALSE)
   {
     return;
   }
@@ -675,6 +686,10 @@ function exec_php_file($app)
       $WshShell->Release();
       return;
     }
+  }
+  if (pclose(popen("start php $app", "r")) !== FALSE)
+  {
+    return;
   }
 
   #if we fail to start $app in the background, include it now.
