@@ -38,4 +38,26 @@ $error = "";
 
 $smarty->display('login.tpl');
 
+# download news once a day
+{
+  $app = 'get_news.php';
+  global $cache_dir;
+  $file = $cache_dir . DIRECTORY_SEPARATOR . "news.txt";
+
+  if (file_exists($file) && filesize($file) > 0)
+  {
+    // we will fetch list of news once a day
+    $stat = array();
+    $stat = stat($file);
+    $file_mdate = date ("F d Y", $stat['mtime']);
+    $today = date ("F d Y", time());
+    if ($today == $file_mdate)
+    {
+      return;
+    }
+  }
+
+  exec_php_file($app);
+}
+
 ?>
