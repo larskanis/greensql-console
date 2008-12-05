@@ -2,7 +2,4 @@
 
 {include file="$Page"}
 <p>
-<br/>
-<br/>
-<br/>
 {include file="footer.tpl"}
