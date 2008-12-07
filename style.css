@@ -17,6 +17,8 @@ table td {
  padding: 1px;
  border-style: dotted;
  border-color:grey;
+ font-size: 14px;
+ vertical-align: top;
 }
 
 #help_content {
