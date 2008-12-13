@@ -13,7 +13,7 @@ if (!$data)
 $news = parse_news($data);
 
 $file = $cache_dir . DIRECTORY_SEPARATOR . "news.txt";
-#print "writing $file\n";
+print "writing $file\n";
 $fp = @fopen($file, "w");
 if (!$fp)
 {
@@ -87,6 +87,48 @@ function get_page($url)
     $data = file_get_contents($url);
     return $data;
   }
+  if (function_exists('parse_url'))
+  {
+    $u_info = parse_url($url);
+    $host = $u_info['host'];
+    $path = $u_info['path'];
+
+    $request  = "GET $path HTTP/1.1\r\n";
+    $request .= "Host: $host\r\n";
+    $request .= "Connection: Close\r\n\r\n";
+
+    $errno;
+    $errstr;
+    $fp = @fsockopen($host, 80, $errno, $errstr, 10);
+    if (!$fp)
+        return "";
+    @stream_set_timeout($fp, 2);
+    if (@fwrite($fp, $request) === false) {
+        @fclose($fp);
+        return "";
+    }
+    $info = @stream_get_meta_data($fp);
+    if ($info['timed_out']) {
+        @fclose($fp);
+        return;
+    }
+    $result = '';
+    while (!@feof($fp)) {
+        $result .= fgets($fp, 1024);
+        $info = @stream_get_meta_data($fp);
+        if ($info['timed_out']) {
+            @fclose($fp);
+            return;
+        }
+    }
+    @fclose($fp);
+    $pos = @strpos($result, "\r\n\r\n");
+    if($pos === false)
+        return;
+    $body = @substr($result, $pos + 4);
+    return $body;
+  }
 
 }
+
 ?>
