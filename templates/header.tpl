@@ -18,7 +18,7 @@
 <a href="log_view.php?{$TokenName}={$TokenID}">View Log</a> | 
 <a href="user_edit.php?{$TokenName}={$TokenID}">Settings</a> | 
 <a href="cleanall.php?{$TokenName}={$TokenID}">Clean All</a> | 
-<a target="_blank" href="http://www.greensql.net/forum/1">Support</a> |
+<a target="_blank" href="http://www.greensql.net/forum">Support</a> |
 <a href="logout.php">Logout</a>
 </div>
 </tt>
