@@ -13,7 +13,7 @@ if (!$data)
 $news = parse_news($data);
 
 $file = $cache_dir . DIRECTORY_SEPARATOR . "news.txt";
-print "writing $file\n";
+#print "writing $file\n";
 $fp = @fopen($file, "w");
 if (!$fp)
 {
