@@ -22,15 +22,15 @@
 <tr><td colspan=2>&nbsp;</td></tr>
 
 <tr><td valign="top" width="100">Old password</td>
-    <td><input type="password" name="oldpass" value=""></td>
+    <td><input type="password" name="oldpass" value="" autocomplete="off"></td>
 </tr>
 
 <tr><td valign="top" width="100">New password</td>
-    <td><input type="password" name="pass" value=""></td>
+    <td><input type="password" name="pass" value="" autocomplete="off"></td>
 </tr>
 
 <tr><td valign="top" width="100">Verify password</td>
-    <td><input type="password" name="pass2" value=""></td>
+    <td><input type="password" name="pass2" value="" autocomplete="off"></td>
 </tr>
 
 <tr>
