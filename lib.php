@@ -657,7 +657,7 @@ function exec_php_file($app)
     return;
   }
   // check if we are in unix like os
-  if (file_exists("/dev/null") )
+  if (!check_fn_disabled('exec') && file_exists("/dev/null") )
   {
     if (file_exists("/usr/bin/php"))
     {
@@ -673,7 +673,8 @@ function exec_php_file($app)
   // few variants for windows
   $out = "";
   $ret = "";
-  if (exec('start /B php $app',$out,$ret) !== FALSE)
+  if (!check_fn_disabled('exec') && 
+      exec('start /B php $app',$out,$ret) !== FALSE)
   {
     return;
   }
@@ -687,13 +688,20 @@ function exec_php_file($app)
       return;
     }
   }
-  if (pclose(popen("start php $app", "r")) !== FALSE)
+  if (!check_fn_disabled('popen') && !check_fn_disabled('pclose') &&
+      pclose(popen("start php $app", "r")) !== FALSE)
   {
     return;
   }
 
   #if we fail to start $app in the background, include it now.
-  #include_once($app);
+  include_once($app);
+}
+
+// this function checks if specific high priviledge command is enabled
+function check_fn_disabled($fn)
+{
+  return in_array( $fn, explode( ',',ini_get( 'disable_functions' ) ) );
 }
 
 ?>
