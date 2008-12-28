@@ -33,5 +33,5 @@ This directory is used to store cached pages of the management
 console. You need to make this directory world-writable.
 You can simply run the following command (in a shell):
 
-shell> hmod 0777 templates_c
+shell> chmod 0777 templates_c
 
