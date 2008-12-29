@@ -31,7 +31,7 @@ if (isset($_POST['action']) && $_POST['action'] == "approve" && $agroupid)
     {
         $msg = "<font color='red'>$error</font>";
     } else {
-        if ($_POST['submit'] == "Ingore this query")
+        if ($_POST['submit'] == "Ignore this query")
         {
             ignore_alert($agroupid);
             $alert['status'] = 2;
