@@ -8,8 +8,8 @@
 
 <table cellspacing=0 cellpadding=0 width="100%" style="table-layout:fixed;">
 <tr>
- <td width=120>Date & Time</td>
- <td width=120>User [DB]</td>
+ <td width=150>Date & Time</td>
+ <td width=150>User [DB]</td>
  <td>Description</td>
  <td width=80>Status</td>
 </tr>
