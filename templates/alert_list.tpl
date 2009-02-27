@@ -17,6 +17,7 @@
  <td>Pattern</td>
 </tr>
 
+{ if count($alerts) > 0 }
 {section name=sec2 loop=$alerts}
 <tr>
 <td>{$alerts[sec2].agroupid}</td>
@@ -26,7 +27,9 @@
 <td><a href="alert_view.php?agroupid={$alerts[sec2].agroupid}&{$TokenName}={$TokenID}">{$alerts[sec2].short_pattern}</a></td>
 </tr>
 {/section}
-
+{ else }
+<td colspan="5">The list is empty.</td>
+{ /if }
 </table>  
 
 <br/>

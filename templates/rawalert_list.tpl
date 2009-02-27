@@ -14,6 +14,7 @@
  <td width=80>Status</td>
 </tr>
 
+{ if count($alerts) > 0 }
 {section name=sec2 loop=$alerts}
 <tr bgcolor={$alerts[sec2].color}>
 <td nowrap style="font-size:13px;">{$alerts[sec2].event_time}</td>
@@ -22,7 +23,9 @@
 <td>{$alerts[sec2].block_str}</td>
 </tr>
 {/section}
-
+{ else }
+<td colspan="4">No alerts available.</td>
+{ /if }
 </table>  
 <br/>
 <center>{$pager}</center>
