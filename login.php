@@ -23,6 +23,7 @@ if (isset($_POST['login']) && isset($_POST['user']) && isset($_POST['pass']))
         global $tokenname;
         $_SESSION['userid']= $u['userid'];
         $_SESSION['user'] = $user;
+        generate_session_token();
 	header("location: dashboard.php?$tokenname=$tokenid");
 	exit;
     } else {

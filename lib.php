@@ -30,7 +30,7 @@ $smarty->assign("Version", $version);
 #    die( $error);
 #}
 
-# check if we came not from the login page and ceck if user is in session
+# check if we came not from the login page and check if user is in session
 # otherwise - user is not loged in
 if (isset($_SESSION['login']) && $_SESSION['login'] != 1 && !isset($_SESSION['user']))
 {
@@ -41,6 +41,7 @@ if (isset($_SESSION['login']) && $_SESSION['login'] != 1 && !isset($_SESSION['us
 # we are logged in - check the token
 $good_token = 0;
 $tokenname= "token";
+$tokenid = "";
 if (isset($_SESSION[$tokenname]) && isset($_REQUEST[$tokenname]) )
 {
     if ($_SESSION[$tokenname] != "" && $_SESSION[$tokenname] == $_REQUEST[$tokenname])
@@ -59,12 +60,22 @@ if ($good_token == 0)
     exit;
 }
 
-#denerate next token
+#generate next token
 #a token will be changed every hour
-$tokenid = md5($_SESSION['user'].date("G j-m-Y").session_id());
-$smarty->assign("TokenName", $tokenname);
-$smarty->assign("TokenID", $tokenid );
-$_SESSION[$tokenname] = $tokenid;
+generate_session_token();
+
+function generate_session_token()
+{
+  global $smarty;
+  global $tokenname;
+  global $tokenid;
+  #generate next token
+  #a token will be changed every hour
+  $tokenid = md5($_SESSION['user'].date("G j-m-Y").session_id());
+  $smarty->assign("TokenName", $tokenname);
+  $smarty->assign("TokenID", $tokenid );
+  $_SESSION[$tokenname] = $tokenid;
+}
 
 function db_connect()
 {
