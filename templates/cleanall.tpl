@@ -5,7 +5,7 @@
 {if $msg }
 <pre>{$msg}</pre>
 {/if }
-Preas on the button to clean all alerts.<br/><br/>
+Press on the button to clean all alerts.<br/><br/>
 <form method="POST">
 <input type=submit name=submit value="submit">
 <input type="hidden" name="{$TokenName}" value="{$TokenID}">
