@@ -1,4 +1,5 @@
-<h3>Database: {$DB_Name}</h3>
+{ $DB_Menu }
+<h3>{$DB_Name}</h3>
 { if $DB_ProxyID }
 <strong>Listener settings</strong><br/>
 Name: {$DB_ProxyName}<br/>
