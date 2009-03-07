@@ -1,4 +1,5 @@
-<h3>Edit Database Settings: {$DB_Name}</h3>
+{ $DB_Menu }
+<h3>Database Settings</h3>
 {if $msg }
 <pre>{$msg}</pre>
 {/if }
