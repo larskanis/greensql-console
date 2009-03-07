@@ -15,10 +15,10 @@ function get_section_help($section)
     $help = "<br/><h3>Log Screen Help</h3>Only last $num_log_lines lines are displayed here.<br/>Log events are in reverse order.<br/>";
   } else if ($section == "alert_list")
   {
-    $help = "<br/><h3>What is a whitelist?</h3>A whitelist is a list of SQL patterns that have been approved and will be ignored by GreenSQL.  Patterns can be added to the whitelist once an alert is generated for that pattern.  Find the query in the <a href='rawalert_list.php?$tokenname=$tokenid'>Alerts</a> section and choose to \"Allow this query\".<br/>";
+    $help = "<h3>What is a whitelist?</h3>A whitelist is a list of SQL patterns that have been approved and will be ignored by GreenSQL.  Patterns can be added to the whitelist once an alert is generated for that pattern.  Find the query in the <a href='rawalert_list.php?$tokenname=$tokenid'>Alerts</a> section and choose to \"Allow this query\".<br/>";
   } else if ($section == "db_add")
   {
-    $help = "<br/><h3>What is a database?</h3>Database names coincide to the names of databases on the backend SQL server.  A database should be coupled with a GreenSQL <a href='proxy_add.php?$tokenname=$tokenid'>Listener object</a>. A number of databases can use the same GreenSQL Listener.  You can edit the permissions for each database to block actions such as changes to DB structure, execution of sensitive commands.<br/>";
+    $help = "<h3>What is a database?</h3>Database names coincide to the names of databases on the backend SQL server.  A database should be coupled with a GreenSQL <a href='proxy_add.php?$tokenname=$tokenid'>Listener object</a>. A number of databases can use the same GreenSQL Listener.  You can edit the permissions for each database to block actions such as changes to DB structure, execution of sensitive commands.<br/>";
   } else if ($section == "rawalert_list")
   {
     $help = '<br/><h3>Alerts Help</h3>This page shows all suspicious SQL queries.';
