@@ -17,6 +17,11 @@ if (isset($_GET['p']))
 {
     $start_id = abs(intval($_GET['p']));
 }
+$db_id = 0;
+if (isset($_GET['db_id']))
+{
+    $db_id = abs(intval($_GET['db_id']));
+}
 $limit_per_page = 10;
 
 if ($status == 1)
@@ -29,12 +34,22 @@ $smarty->assign("Page","alert_list.tpl");
 
 $dbs = get_databases();
 $smarty->assign("databases", $dbs);
+if ($db_id)
+{
+  $db  = get_database($db_id);
+  $smarty->assign("DB_Menu", get_local_db_menu($db['db_name'], $db_id) );
+  if ($db_id == 1)
+  {
+    $db['db_name'] = "";
+  }
+
+}
 $smarty->assign("status", $status);
 
-$alerts = get_alerts_bypage($start_id*$limit_per_page,$limit_per_page,$status);
+$alerts = get_alerts_bypage($start_id*$limit_per_page,$limit_per_page,$status, $db_id, $db['db_name']);
 $smarty->assign("alerts", $alerts);
 
-$numResults = get_num_alerts($status);
+$numResults = get_num_alerts($status, $db_id, $db['db_name']);
 
 $list_pages = "";
 
@@ -42,6 +57,10 @@ global $tokenid;
 global $tokenname;
 
   $file = "alert_list.php?status=$status&$tokenname=$tokenid";
+  if ($db_id)
+  {
+    $file .= "&db_id=$db_id";
+  }
   // update list of pages
   $num_pages = ceil($numResults/$limit_per_page)+1;
   if ($start_id > 2)
