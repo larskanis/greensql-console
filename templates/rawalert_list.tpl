@@ -1,3 +1,4 @@
+{ $DB_Menu }
 {if $HelpPage}
 {include file="$HelpPage"}
 {/if}
@@ -6,7 +7,7 @@
 <pre>{$msg}</pre>
 {/if }
 
-<table cellspacing=0 cellpadding=0 width="100%" style="table-layout:fixed;">
+<table cellspacing=0 cellpadding=0 width="100%" id="table_cont">
 <tr>
  <td width=150>Date & Time</td>
  <td width=150>User [DB]</td>
