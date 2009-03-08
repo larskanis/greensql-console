@@ -6,6 +6,9 @@
 </HEAD>
 
 <BODY bgcolor="#ffffff" onLoad="init_help();">
+<table width="100%">
+<tr><td width="10%"><img src="images/greensql-logo.gif"></td>
+<td style="vertical-align:middle">
 <b><font color="#00dd00" size=4>GreenSQL</font></b><br>
 <tt>
 <div id="menu">
@@ -22,4 +25,16 @@
 <a href="logout.php">Logout</a>
 </div>
 </tt>
+</td>
+</tr>
+</table>
 <hr>
+<table width="100%">
+<tr>
+<td width="10%" id="menu">
+<b>Databases:</b></br>
+{section name=sec1 loop=$databases}
+<a href="db_view.php?db_id={$databases[sec1].id}&{$TokenName}={$TokenID}">{$databases[sec1].name}</a><br/>
+{/section}
+</td>
+<td>
