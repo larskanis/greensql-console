@@ -111,6 +111,9 @@ if (!$proxy_id)
 
 $smarty->assign("Page","proxy_add.tpl");
 
+$dbs = get_databases();
+$smarty->assign("databases", $dbs);
+
 $proxies = get_proxies();
 $smarty->assign("proxies", $proxies);
 if (count($proxy) > 1)
