@@ -6,9 +6,9 @@ global $demo_version;
 global $smarty;
 
 $db_id = 0;
-if (isset($_GET['id']))
+if (isset($_GET['db_id']))
 {
-    $db_id = intval($_GET['id']);
+    $db_id = intval($_GET['db_id']);
 }
 if ($db_id == 0)
 {
@@ -130,7 +130,10 @@ $smarty->assign("DB_Listener", $db['listener']);
 $smarty->assign("DB_Backend", $db['backend']);
 $smarty->assign("DB_Type", $db['dbtype']);
 $smarty->assign("DB_ID", $db_id);
-
+if ($db_id)
+{
+  $smarty->assign("DB_Menu", get_local_db_menu($db['db_name'], $db_id) );
+}
 $enabled_str = "<font color=\"red\">enabled</font>";
 
 $smarty->assign("DB_StatusId", $db['status']);
