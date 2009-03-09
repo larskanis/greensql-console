@@ -22,7 +22,7 @@ Number of databases : {$NUM_Dbs}<br/>
 </td></tr>
 </table>
 <h4>Alerts</h4>
-<table cellspacing=0 cellpadding=0 width="100%" style="table-layout:fixed;">
+<table cellspacing=0 cellpadding=0 width="100%" id="table_cont">
 <tr>
  <td width=150>Date & Time</td>
  <td width=150>User [DB]</td>
@@ -47,7 +47,7 @@ Number of databases : {$NUM_Dbs}<br/>
  </table>
 { /if }
 <h4>News</h4>
-<table cellspacing=0 cellpadding=0 width="100%" style="table-layout:fixed;" >
+<table cellspacing=0 cellpadding=0 width="100%" id="table_cont">
 <tr>
  <td width=150>Date & Time</td>
  <td>Description</td>
