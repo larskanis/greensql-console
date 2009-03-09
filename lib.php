@@ -192,9 +192,9 @@ function get_databases()
     return $dbs;
 }
 
-function get_database($dbid)
+function get_database($db_id)
 {
-    $dbid = intval($dbid);
+    $db_id = abs(intval($db_id));
     $q = "SELECT db_name, INET_NTOA(frontend_ip) as 'frontend_ip', ".
          "frontend_port, dbtype, proxy.status as 'proxy_status',".
          "proxyname, db_perm.proxyid, ".
@@ -202,7 +202,7 @@ function get_database($dbid)
 	 "INET_NTOA(backend_ip) as 'backend_ip', ".
 	 "perms, perms2, db_perm.status as 'status', status_changed ".
          "FROM db_perm left join proxy USING (proxyid) ".
-	 "WHERE dbpid=$dbid ";
+	 "WHERE dbpid=$db_id ";
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
     if (!$row)
@@ -356,17 +356,17 @@ function get_alerts($status)
     return $alerts;
 }
 
-function get_alerts_bypage($from,$count,$status)
+function get_alerts_bypage($from,$count,$status, $db_id = 0, $db_name = "")
 {
     $status = intval($status);
     $q = "SELECT alert_group.*,proxy.proxyname ".
          "FROM alert_group, proxy ".
          "WHERE alert_group.proxyid=proxy.proxyid ".
+         (($db_id || $db_name) ? " AND db_name = '$db_name' " : "").
          "AND alert_group.status = $status ".
          "ORDER BY update_time DESC ".
          "LIMIT $from, $count";
     $result = mysql_query($q);
-
     $alerts = array();
     $row = array();
     while ($row = mysql_fetch_array($result) )
@@ -383,11 +383,15 @@ function get_alerts_bypage($from,$count,$status)
     return $alerts;
 }
 
-function get_num_alerts($status)
+function get_num_alerts($status, $db_id, $db_name = "")
 {
     $status = intval($status);
     $q = "SELECT count(*) FROM alert_group ".
          "WHERE status = $status";
+    if ($db_id || $db_name)
+    {
+      $q .= " AND db_name = '$db_name'";
+    }
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
     if (!$row)
@@ -454,10 +458,14 @@ function get_raw_alerts_with_limit($agroupid, $limit)
     return $alerts;
 }
 
-function get_num_raw_alerts( $status)
+function get_num_raw_alerts($status, $db_id = 0, $db_name = "")
 {
     $q = "SELECT count(*) FROM alert, alert_group ".
-    "WHERE alert.agroupid = alert_group.agroupid AND status = $status ";
+         "WHERE alert.agroupid = alert_group.agroupid AND status = $status";
+    if ($db_id || $db_name)
+    {
+      $q .= " AND db_name='$db_name'";
+    }
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
     if (!$row)
@@ -465,10 +473,11 @@ function get_num_raw_alerts( $status)
     return $row[0];
 }
 
-function get_raw_alerts_bypage($from, $count, $status)
+function get_raw_alerts_bypage($from, $count, $status, $db_id = 0, $db_name = "")
 {
     $q = "SELECT * FROM alert, alert_group ".
          "WHERE alert.agroupid = alert_group.agroupid AND status = $status ".
+         (($db_id || $db_name) ? "AND db_name='$db_name' " : "" ).
          "ORDER BY event_time DESC LIMIT $from, $count";
     $result = mysql_query($q);
 
@@ -715,4 +724,40 @@ function check_fn_disabled($fn)
   return in_array( $fn, explode( ',',ini_get( 'disable_functions' ) ) );
 }
 
+function get_local_db_menu($db_name = "", $db_id = 0)
+{
+  global $tokenname;
+  global $tokenid;
+  $msg = "<tt>Database $db_name ";
+  $script = ereg_replace(".*/", "", $_SERVER['SCRIPT_NAME']);
+  if ($script == "db_view.php")
+  {
+    $msg .= "<strong>Overview</strong> | ";
+
+  } else {
+    $msg .= "<a href='db_view.php?db_id=$db_id&$tokenname=$tokenid'>Overview</a> | ";
+  }
+  if ($script == "rawalert_list.php")
+  {
+    $msg .= "<strong>Alerts</strong> | ";
+  } else {
+    $msg .= "<a href='rawalert_list.php?db_id=$db_id&$tokenname=$tokenid'>Alerts</a> | ";
+  }
+  if ($script == "alert_list.php")
+  {
+    $msg .= "<strong>Whitelist</strong> | ";
+  } else {
+    $msg .= "<a href='alert_list.php?db_id=$db_id&status=1&$tokenname=$tokenid'>Whitelist</a> | ";
+  }
+  if ($script == "db_edit.php")
+  {
+    $msg .= "<strong>Settings</strong>";
+  } else {
+    $msg .= "<a href='db_edit.php?db_id=$db_id&$tokenname=$tokenid'>Settings</a>";
+  }
+  $msg .= "</tt><hr>";
+
+  
+  return $msg;
+}
 ?>
