@@ -356,16 +356,27 @@ function get_alerts($status)
     return $alerts;
 }
 
-function get_alerts_bypage($from,$count,$status, $db_id = 0, $db_name = "")
+function get_alerts_bypage($from,$count,$status, $db_id = 0, $db_name = "", $db_type = "")
 {
     $status = intval($status);
-    $q = "SELECT alert_group.*,proxy.proxyname ".
+    $q = '';
+    if (!$db_type)
+    {
+      $q = "SELECT alert_group.*,proxy.proxyname ".
          "FROM alert_group, proxy ".
          "WHERE alert_group.proxyid=proxy.proxyid ".
          (($db_id || $db_name) ? " AND db_name = '$db_name' " : "").
          "AND alert_group.status = $status ".
          "ORDER BY update_time DESC ".
          "LIMIT $from, $count";
+    } else {
+      $q = "SELECT alert_group.*,proxy.proxyname FROM alert_group ".
+           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
+           "LEFT JOIN db_perm USING (db_name) WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
+           "AND alert_group.status = $status ".
+           "ORDER BY update_time DESC ".
+           "LIMIT $from, $count";
+    }
     $result = mysql_query($q);
     $alerts = array();
     $row = array();
@@ -383,14 +394,22 @@ function get_alerts_bypage($from,$count,$status, $db_id = 0, $db_name = "")
     return $alerts;
 }
 
-function get_num_alerts($status, $db_id, $db_name = "")
+function get_num_alerts($status, $db_id, $db_name = "", $db_type = '')
 {
     $status = intval($status);
-    $q = "SELECT count(*) FROM alert_group ".
-         "WHERE status = $status";
-    if ($db_id || $db_name)
+    if (!$db_type)
     {
-      $q .= " AND db_name = '$db_name'";
+      $q = "SELECT count(*) FROM alert_group ".
+         "WHERE status = $status";
+      if ($db_id || $db_name)
+      {
+        $q .= " AND db_name = '$db_name'";
+      }
+    } else {
+      $q = "SELECT count(*) FROM alert_group ".
+           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
+           "LEFT JOIN db_perm USING (db_name) WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
+           "AND alert_group.status = $status ";
     }
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
@@ -398,6 +417,7 @@ function get_num_alerts($status, $db_id, $db_name = "")
       return 0;
     return $row[0];
 }
+
 
 function get_alert($agroupid)
 {
@@ -458,13 +478,24 @@ function get_raw_alerts_with_limit($agroupid, $limit)
     return $alerts;
 }
 
-function get_num_raw_alerts($status, $db_id = 0, $db_name = "")
+function get_num_raw_alerts($status, $db_id = 0, $db_name = "", $db_type = "")
 {
-    $q = "SELECT count(*) FROM alert, alert_group ".
-         "WHERE alert.agroupid = alert_group.agroupid AND status = $status";
-    if ($db_id || $db_name)
+    $q = '';
+    if (!$db_type)
     {
+      $q = "SELECT count(*) FROM alert, alert_group ".
+         "WHERE alert.agroupid = alert_group.agroupid AND status = $status";
+      if ($db_id || $db_name)
+      {
       $q .= " AND db_name='$db_name'";
+      }
+    } else {
+      $q = "SELECT count(*) ".
+           "FROM alert LEFT JOIN alert_group USING (agroupid) ".
+           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
+           "LEFT JOIN db_perm USING (db_name) ".
+           "WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
+           "AND alert_group.status = $status "; 
     }
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
@@ -473,12 +504,24 @@ function get_num_raw_alerts($status, $db_id = 0, $db_name = "")
     return $row[0];
 }
 
-function get_raw_alerts_bypage($from, $count, $status, $db_id = 0, $db_name = "")
+function get_raw_alerts_bypage($from, $count, $status, $db_id = 0, $db_name = "", $db_type = "")
 {
-    $q = "SELECT * FROM alert, alert_group ".
+    $q = '';
+    if (!$db_type)
+    {
+      $q = "SELECT * FROM alert, alert_group ".
          "WHERE alert.agroupid = alert_group.agroupid AND status = $status ".
          (($db_id || $db_name) ? "AND db_name='$db_name' " : "" ).
          "ORDER BY event_time DESC LIMIT $from, $count";
+    } else {
+      $q = "SELECT alert.*,alert_group.* ".
+           "FROM alert LEFT JOIN alert_group USING (agroupid) ". 
+           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
+           "LEFT JOIN db_perm USING (db_name) ".
+           "WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
+           "AND alert_group.status = $status ".
+           "ORDER BY event_time DESC LIMIT $from, $count";
+    }
     $result = mysql_query($q);
 
     $alerts = array();
