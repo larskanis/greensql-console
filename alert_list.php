@@ -38,18 +38,20 @@ if ($db_id)
 {
   $db  = get_database($db_id);
   $smarty->assign("DB_Menu", get_local_db_menu($db['db_name'], $db_id) );
-  if ($db_id == 1)
-  {
-    $db['db_name'] = "";
-  }
-
 }
 $smarty->assign("status", $status);
 
-$alerts = get_alerts_bypage($start_id*$limit_per_page,$limit_per_page,$status, $db_id, $db['db_name']);
+$db_type = '';
+if ($db_id == 1)
+{
+  $db['db_name'] = "";
+  $db_type = 'mysql';
+}
+
+$alerts = get_alerts_bypage($start_id*$limit_per_page,$limit_per_page,$status, $db_id, $db['db_name'], $db_type);
 $smarty->assign("alerts", $alerts);
 
-$numResults = get_num_alerts($status, $db_id, $db['db_name']);
+$numResults = get_num_alerts($status, $db_id, $db['db_name'], $db_type);
 
 $list_pages = "";
 
