@@ -19,4 +19,4 @@ Create command: {$DB_Create}<br/>
 Disclose table stucture: {$DB_Info}<br/>
 Drop command:  {$DB_Drop}<br/>
 Other sensitive commands: {$DB_BlockQ}<br/>
-<a href="db_edit.php?id={$DB_ID}&{$TokenName}={$TokenID}">Change database settings</a><br/>
+<a href="db_edit.php?db_id={$DB_ID}&{$TokenName}={$TokenID}">Change database settings</a><br/>
