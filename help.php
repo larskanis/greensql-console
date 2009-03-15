@@ -31,4 +31,33 @@ function get_section_help($section)
   }
   return $help;
 }
+
+function get_db_modes()
+{
+  $modes = array();
+  $modes[0] = array('mode' => 'Database IDS',
+                   'help' => 'Block high risk queries based on the heuristics and privileged commands. '.
+                             'Whitelist is checked for exceptions.');
+  $modes[1] = array('mode' => 'Database IDS (block admin commands only)',
+                   'help' => 'Block high privileged commands only for example CREATE TABLE. Whitelist is checked for exceptions.');
+  $modes[2] = array('mode' => 'Database IPS (no blocking)',
+                   'help' => 'Nothing is blocked. Only warning is generated for suspicious queries. Whitelist is checked for exceptions.');
+  $modes[4] = array('mode' => 'Database Firewall',
+                   'help' => 'Block all commands unlisted in whitelist. It is recommended to enable this mode after whitelist is build.');
+  $modes[10]= array('mode' => 'Learning Mode',
+                   'help' => 'During learning mode no queries are blocked. Query patterns are automatically added to the whitelist.');
+  $modes[11]= array('mode' => 'Learning Mode for 3 days',
+                   'help' => 'Same as <stromg>Learning Mode</strong>. Query patterns are automatically added to the whitelist. '.
+                   'After 3 days database is automatically switched to the <strong>Database Firewall</strong> mode.');
+  $modes[12]= array('mode' => 'Learning Mode for 7 days',
+                   'help' => 'Same as <strong>Learning Mode</strong>. Query patterns are automatically added to the whitelist. '.
+                   'After 7 days database is automatically switched to the <strong>Database Firewall</strong> mode.');
+  return $modes;
+}
+
+function get_db_mode($id)
+{
+  $modes = get_db_modes();
+  return $modes[$id];
+}
 ?>
