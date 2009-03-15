@@ -1,6 +1,8 @@
 <?php
 
 require 'lib.php';
+require 'help.php';
+
 global $demo_version;
 
 global $smarty;
@@ -163,22 +165,13 @@ $smarty->assign("option_values", $ids);
 $smarty->assign("option_output", $names);
 $smarty->assign("option_selected", $db['proxyid']);
 
-$ids = array();
+$modes = get_db_modes();
+$ids = array_keys($modes);
 $names = array();
-$ids[] = '0';
-$names[] = 'Block based on risk calculations';
-$ids[] = '1';
-$names[] = 'Block privileged commands';
-$ids[] = '2';
-$names[] = 'Simulation mode';
-$ids[] = '4';
-$names[] = 'Block unlisted in Witelist (RECOMENDED)';
-$ids[] = '10';
-$names[] = 'Learning mode (you need to stop it manually)';
-$ids[] = '11';
-$names[] = 'Learning mode for 3 days (RECOMENDED)';
-$ids[] = '12';
-$names[] = 'Learning mode for 7 days (RECOMENDED)';
+foreach ($modes as $mode)
+{
+  $names[] = $mode['mode'];
+}
 
 $smarty->assign("block_values", $ids);
 $smarty->assign("block_output", $names);
