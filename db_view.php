@@ -1,6 +1,8 @@
 <?php
 
 require 'lib.php';
+require 'help.php';
+
 global $smarty;
 
 $db_id = 0;
@@ -42,31 +44,15 @@ if ($db['proxy_status'] == 1)
 }
     
 $block_status = '';
+$mode = get_db_mode($db['status']);
+$block_status = '<strong>'.$mode['mode'].'</strong><br/>'.$mode['help'];
 
-if ($db['status'] == 0)
+if ($db['status'] == 11)
 {
-    $block_status = '1. Block queries based on the risk calculation and usage of privileged operations.';
-} else if ($db['status'] == 1)
-{
-    $block_status = '2. Sollely block queries that use privileged operations. Risk calculation is not taken into account.';
-} else if ($db['status'] == 2)
-{
-    $block_status = '3. Simulation mode. <b>Nothing is blocked.</b>';
-} else if ($db['status'] == 3)
-{
-    $block_status = '4. Simulatate blocking of privileged commands.\n';
-} else if ($db['status'] == 4)
-{
-    $block_status = '5. Allways block new commands. Commands that do not apper in whitelist are automatically blocked. (<b>Automatically enabled after learning period for 3 or 7 days is over</b>).'; 
-} else if ($db['status'] == 10)
-{
-    $block_status = '10. Enable learning mode. If learning mode is over you need to swith it to other mode <b>manually<b/>.';
-} else if ($db['status'] == 11)
-{
-    $block_status = "11. Enable learning mode for 3 days starting from: ".$db['status_changed'];
+    $block_status .= "<br/>This mode enabled from: ".$db['status_changed'];
 } else if ($db['status'] == 12)
 {
-    $block_status = "12. Enable learning mode for 7 days starting from: ".$db['status_changed'];
+    $block_status .= "<br/>This mode enabled from: ".$db['status_changed'];
 }
 $smarty->assign("DB_BlockStatus", $block_status);
 
