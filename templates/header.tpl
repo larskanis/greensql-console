@@ -36,5 +36,7 @@
 {section name=sec1 loop=$databases}
 <a href="db_view.php?db_id={$databases[sec1].id}&{$TokenName}={$TokenID}">{$databases[sec1].name}</a><br/>
 {/section}
+<br/>
+<a href="db_add.php?{$TokenName}={$TokenID}">Add db</a>
 </td>
 <td>
