@@ -17,8 +17,8 @@ Application Installation
 
 If GreenSQL configuration database was not installed together
 with greensql-fw package, run "greensql-create-db.sh" script
-found in the greensql-fw package. This file executed all commands
-required to configure the database.
+found in the greensql-fw package. This script performs all
+necessary steps required to configure the database.
 
 2. Alter configuration settings
 
