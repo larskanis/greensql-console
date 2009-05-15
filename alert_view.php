@@ -35,7 +35,7 @@ if (isset($_POST['action']) && $_POST['action'] == "approve" && $agroupid)
         {
             ignore_alert($agroupid);
             $alert['status'] = 2;
-        } elseif ($_POST['submit'] == "Allow this query") {
+        } elseif ($_POST['submit'] == "Add to Whitelist") {
             approve_alert($agroupid,$alert);
             $alert['status'] = 1;
         }

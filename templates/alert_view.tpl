@@ -14,9 +14,9 @@
 <form method="post">
 <input type="hidden" name="action" value="approve">
 <input type="hidden" name="{$TokenName}" value="{$TokenID}">
-In order to always allow this SQL pattern press on "Allow this query" button.</br><br/>
+In order to always allow this SQL pattern press on "Add to Whitelist" button.</br><br/>
 In order to ignore this SQL pattern press on the "Ignore this query" button.<br/>In case query selected is blocked you will not get any report in the console.<br/><br/>
-<input type="submit" name="submit" value="Allow this query">
+<input type="submit" name="submit" value="Add to Whitelist">
 <input type="submit" name="submit" value="Ignore this query">
 </form>
 </td></tr>
