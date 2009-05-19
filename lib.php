@@ -529,6 +529,8 @@ function get_raw_alerts_bypage($from, $count, $status, $db_id = 0, $db_name = ""
     while ($row = mysql_fetch_array($result) )
     {
         $row['description'] = join("; ", split("\n", $row['reason']));
+        # fix .; inside the description string
+        $row['description'] = preg_replace("/\.;/",";",$row['description']);
         $row['reason'] = str_replace("\n", "<br/>\n", $row['reason']);
         if ($row['block'] == 1)
         {
