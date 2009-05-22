@@ -1,4 +1,8 @@
-<h3>View Alert</h3>
+{ $DB_Menu }
+{if $HelpPage}
+{include file="$HelpPage"}
+{/if}
+<h3>{$Name}</h3>
 {if $msg }
 <pre>{$msg}</pre>
 {/if }
@@ -14,8 +18,6 @@
 <form method="post">
 <input type="hidden" name="action" value="approve">
 <input type="hidden" name="{$TokenName}" value="{$TokenID}">
-In order to always allow this SQL pattern press on "Add to Whitelist" button.</br><br/>
-In order to ignore this SQL pattern press on the "Ignore this query" button.<br/>In case query selected is blocked you will not get any report in the console.<br/><br/>
 <input type="submit" name="submit" value="Add to Whitelist">
 <input type="submit" name="submit" value="Ignore this query">
 </form>
