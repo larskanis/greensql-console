@@ -1,13 +1,6 @@
 {if $HelpPage}
 {include file="$HelpPage"}
 {/if}
-<h3>Databases</h3>
-{section name=sec1 loop=$databases}
-<strong>{$databases[sec1].name}</strong>&nbsp;
-<a href="db_view.php?db_id={$databases[sec1].id}&{$TokenName}={$TokenID}">view</a>&nbsp;-&nbsp;
-<a href="db_edit.php?db_id={$databases[sec1].id}&{$TokenName}={$TokenID}">edit</a>
-<br/>
-{/section}
 <h3>Add new database</h3>
 {if $msg }
 <pre>{$msg}</pre>
