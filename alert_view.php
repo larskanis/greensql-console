@@ -1,6 +1,7 @@
 <?php
 
 require 'lib.php';
+require 'help.php';
 global $smarty;
 global $demo_version;
 
@@ -8,16 +9,18 @@ $error = "";
 $msg = "";
 
 $agroupid = 0;
-if (isset($_GET['agroupid']))
+if (isset($_REQUEST['agroupid']))
 {
-    $agroupid = intval($_GET['agroupid']);
+    $agroupid = intval($_REQUEST['agroupid']);
 }
 
-$smarty->assign("Name","Vew Alert");
+$smarty->assign("Name","Vew Alert Pattern");
 $smarty->assign("Page","alert_view.tpl");
 
 $aler = array();
 $alert = get_alert($agroupid);
+$db  = get_database($alert['db_id']);
+$smarty->assign("DB_Menu", get_local_db_menu($alert['db_name'], $alert['db_id']) );
 
 if (isset($_POST['action']) && $_POST['action'] == "approve" && $agroupid)
 {
@@ -69,6 +72,13 @@ $smarty->assign("AGROUP_bad", $bad);
 
 $alerts = get_raw_alerts_with_limit($agroupid, 20);
 $smarty->assign("alerts", $alerts);
+
+$help_msg = get_section_help("alert_view");
+if ($help_msg)
+{
+  $smarty->assign("HelpPage","help.tpl");
+  $smarty->assign("HelpMsg",$help_msg);
+}
 
 $smarty->display('index.tpl');
 
