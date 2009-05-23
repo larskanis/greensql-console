@@ -3,6 +3,7 @@
 require 'lib.php';
 require 'help.php';
 global $smarty;
+global $demo_version;
 
 $proxy_id = 0;
 if (isset($_POST['proxyid']))
@@ -25,6 +26,10 @@ if ($proxy_id && $db_name)
     if (!ereg("^[a-zA-Z0-9_]+$",$db_name))
     {
         $error = "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.";
+    }
+    if ($demo_version)
+    {
+       $error .= "Can not add new database in the demo version.<br/>\n";
     }
     if (!$error)
     {
