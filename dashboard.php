@@ -28,8 +28,16 @@ if (check_user($user, $pass))
 }
 
 $status = 0;
-$alerts = get_raw_alerts_bypage(0, 10, $status);
-$smarty->assign("alerts", $alerts);
+$header = array();
+$header[] = array('field' => 'event_time', 'title' => 'Date & Time', 'size'=> 150, 'sort' => 'desc');
+$header[] = array('field' => 'proxyname', 'title' => 'Listener', 'size' => 100);
+$header[] = array('field' => 'db_name', 'title' => 'DB', 'size' => 100);
+#$header[] = array('field' => 'user', 'title' => 'User', 'size' => 100);
+$header[] = array('title' => 'Description', 'size' => 'auto');
+$header[] = array('field' => 'block', 'title' => 'Status', 'size' => 100);
+
+$alerts = get_raw_alerts($header, $status);
+$smarty->assign("alerts", display_table($header, $alerts));
 
 $news = get_news();
 $smarty->assign("news", $news);
