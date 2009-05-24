@@ -4,7 +4,7 @@
 #$demo_version = 1;
 
 # greensql version
-$version = "0.5.0";
+$version = "0.5.9betta";
 
 # MySQL Database IP address
 $db_host = "127.0.0.1";
@@ -25,6 +25,9 @@ $log_file = "/var/log/greensql.log";
 
 # Number of lines to show when viewing log file.
 $num_log_lines = 200;
+
+# Number of lines to show when displaying a table.
+$limit_per_page = 10;
 
 # Generated web pages cache
 $cache_dir = "templates_c";
