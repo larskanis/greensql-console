@@ -32,13 +32,23 @@ color: #00cc00;
 #table_cont A:visited {
 color: #000000;
 }
-#table_cont td {
+#table_cont td,th {
  border-width:1px;
  padding: 1px;
  border-style: dotted;
  border-color:grey;
  font-size: 14px;
  vertical-align: top;
+ overflow:hidden;
+ text-align: left;
+}
+
+#table_cont th {
+ font-weight:normal;
+}
+
+#table_cont th A:visited {
+color: #00cc00;
 }
 
 #help_content {
