@@ -1,8 +1,13 @@
 <?php
 
-#set default time zone - this prevents PHP5 from 
-#showing strange warning messages
-date_default_timezone_set("America/Los_Angeles");
+include_once("lib_tables.php");
+
+if (function_exists('date_default_timezone_set'))
+{
+  #set default time zone - this prevents PHP5 from 
+  #showing strange warning messages
+  #date_default_timezone_set("America/Los_Angeles");
+}
 
 # do not start session if it was started in login.php file
 if (!(isset($_SESSION['login']) && $_SESSION['login'] == 1))
@@ -330,87 +335,137 @@ function get_proxies()
     return $proxies;
 }
 
-function get_alerts($status)
+function get_alerts($header, $status, $proxyid, $db_id, $db_name, $from, $count )
 {
     $status = intval($status);
-    $q = "SELECT alert_group.*,proxy.proxyname ".
+    $q = "SELECT alert_group.*,proxy.proxyname, db_name ".
          "FROM alert_group, proxy ".
 	 "WHERE alert_group.proxyid=proxy.proxyid ".
-	 "AND alert_group.status = $status ".
-	 "ORDER BY update_time DESC";
+	 "AND alert_group.status = $status ";
+    if ($proxyid)
+      $q .= "AND proxy.proxyid = $proxyid AND alert_group.db_name='$db_name' ";
+    # check if default db
+    #else if ($db_id == 1)
+    #  $q .= "AND alert_group.db_name='' ";
+    $q = add_query_sort($header, $q);
+    $q = add_query_limit($q, $from, $count );
+    #print "q: $q<br/>";
     $result = mysql_query($q);
 
     $alerts = array();
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
-        if (strlen($row['pattern']) > 85)
-	{
-            $row['short_pattern'] = htmlspecialchars(substr($row['pattern'], 0, 80)."...");
-	} else {
-	    $row['short_pattern'] = htmlspecialchars($row['pattern']);
-	}
+        //if (strlen($row['pattern']) > 85)
+	//{
+        //    $row['short_pattern'] = htmlspecialchars(substr($row['pattern'], 0, 80)."...");
+	//} else {
+	//    $row['short_pattern'] = htmlspecialchars($row['pattern']);
+	//}
         $row['pattern'] = htmlspecialchars($row['pattern']);
         $alerts[] = $row;
     }
     return $alerts;
 }
 
-function get_alerts_bypage($from,$count,$status, $db_id = 0, $db_name = "", $db_type = "")
+function get_whitelist($header, $proxyid, $db_id, $db_name, $from, $count )
 {
-    $status = intval($status);
-    $q = '';
-    if (!$db_type)
-    {
-      $q = "SELECT alert_group.*,proxy.proxyname ".
-         "FROM alert_group, proxy ".
-         "WHERE alert_group.proxyid=proxy.proxyid ".
-         (($db_id || $db_name) ? " AND db_name = '$db_name' " : "").
-         "AND alert_group.status = $status ".
-         "ORDER BY update_time DESC ".
-         "LIMIT $from, $count";
-    } else {
-      $q = "SELECT alert_group.*,proxy.proxyname FROM alert_group ".
-           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
-           "LEFT JOIN db_perm USING (db_name) WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
-           "AND alert_group.status = $status ".
-           "ORDER BY update_time DESC ".
-           "LIMIT $from, $count";
-    }
+    $q = "SELECT queryid, proxy.proxyname, query, db_name FROM query, proxy ".
+         "WHERE query.proxyid = proxy.proxyid ";
+    if ($proxyid)
+      $q .= "AND query.proxyid = $proxyid AND query.db_name='$db_name' ";
+    # check if default db
+    else if ($db_id == 1)
+      $q .= "AND query.db_name='' ";
+    $q = add_query_sort($header, $q);
+    $q = add_query_limit($q, $from, $count );
+    #print "q: $q<br/>";
     $result = mysql_query($q);
-    $alerts = array();
+    $rows = array();
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
-        if (strlen($row['pattern']) > 85)
-        {
-            $row['short_pattern'] = htmlspecialchars(substr($row['pattern'], 0, 80)."...");
-        } else {
-            $row['short_pattern'] = htmlspecialchars($row['pattern']);
-        }
-        $row['pattern'] = htmlspecialchars($row['pattern']);
-        $alerts[] = $row;
+        //if (strlen($row['query']) > 85)
+        //{
+        //    $row['short_pattern'] = htmlspecialchars(substr($row['query'], 0, 80)."...");
+        //} else {
+        //    $row['short_pattern'] = htmlspecialchars($row['query']);
+        //}
+        $row['query'] = htmlspecialchars($row['query']);
+        $rows[] = $row;
     }
-    return $alerts;
+    return $rows;
 }
 
-function get_num_alerts($status, $db_id, $db_name = "", $db_type = '')
+function get_whitelist_size($proxyid, $db_id, $db_name)
+{
+    $q = "SELECT count(*) FROM query, proxy ".
+         "WHERE query.proxyid = proxy.proxyid ";
+    if ($proxyid)
+      $q .= "AND query.proxyid = $proxyid AND query.db_name='$db_name' ";
+    # check if default db
+    else if ($db_id == 1)
+      $q .= "AND query.db_name='' ";
+
+    $result = mysql_query($q);
+    $row = mysql_fetch_array($result);
+    if (!$row)
+      return 0;
+    return $row[0];
+}
+
+function get_whitelist_entry($queryid)
+{
+    $agroupid=intval($agroupid);
+    //$q = "SELECT query.*, proxy.proxyname ".
+    //     "FROM query, proxy ".
+    //     "WHERE query.proxyid = proxy.proxyid AND query.queryid = $queryid";
+
+    $q = "SELECT query.*, proxy.proxyname, db_perm.dbpid as 'db_id' ". 
+         "FROM query, proxy, db_perm ".
+         "WHERE query.proxyid = proxy.proxyid AND query.queryid = $queryid ".
+         "AND ((query.db_name = db_perm.db_name AND proxy.proxyid = db_perm.proxyid ) OR ".
+               "(query.db_name = '' AND db_perm.dbpid = 1))";
+    $result = mysql_query($q);
+
+    $row = array();
+    $row = mysql_fetch_array($result);
+
+    if (!$row)
+        return $row;
+    $row['query'] = htmlspecialchars($row['query']);
+    return $row;
+}
+
+function del_whitelist_entry($entry)
+{
+  $q = 'SELECT agroupid from alert_group WHERE proxyid='.
+       $entry['proxyid'].' AND db_name="'.$entry['db_name'].'" '.
+       'AND pattern="'.$entry['query'].'"';
+  $result = mysql_query($q);
+  $row = mysql_fetch_array($result);
+  if ($row)
+  {
+    $agroupid = $row[0];
+    //ignore_alert($agroupid);
+    delete_alert($agroupid);
+  }
+  $q = 'DELETE from query WHERE queryid='.$entry['queryid'];
+  $result = mysql_query($q);
+}
+
+function get_num_alerts( $status, $proxyid, $db_id, $db_name)
 {
     $status = intval($status);
-    if (!$db_type)
-    {
-      $q = "SELECT count(*) FROM alert_group ".
-         "WHERE status = $status";
-      if ($db_id || $db_name)
-      {
-        $q .= " AND db_name = '$db_name'";
-      }
-    } else {
-      $q = "SELECT count(*) FROM alert_group ".
-           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
-           "LEFT JOIN db_perm USING (db_name) WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
-           "AND alert_group.status = $status ";
-    }
+    $q = "SELECT count(*) ".
+         "FROM alert_group ".
+         "WHERE alert_group.status = $status ";
+    if ($proxyid)
+      $q .= "AND alert_group.proxyid = $proxyid AND alert_group.db_name='$db_name' ";
+    # check if default db
+    #else if ($db_id == 1)
+    #  $q .= "AND alert_group.db_name='' ";
+    
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
     if (!$row)
@@ -422,10 +477,11 @@ function get_num_alerts($status, $db_id, $db_name = "", $db_type = '')
 function get_alert($agroupid)
 {
     $agroupid=intval($agroupid);
-    $q = "SELECT alert_group.*,proxy.proxyname ".
-         "FROM alert_group, proxy ".
-         "WHERE alert_group.proxyid=proxy.proxyid AND ".
-         "agroupid = $agroupid ".
+    $q = "SELECT alert_group.*,proxy.proxyname, db_perm.dbpid as 'db_id' ".
+         "FROM alert_group, proxy, db_perm ".
+         "WHERE alert_group.proxyid=proxy.proxyid AND agroupid = $agroupid ".
+         "AND ((alert_group.db_name = db_perm.db_name AND proxy.proxyid = db_perm.proxyid ) OR ".
+               "( db_perm.dbpid = 1)) ".
          "ORDER BY update_time DESC";
     $result = mysql_query($q);
 
@@ -469,6 +525,9 @@ function get_raw_alerts_with_limit($agroupid, $limit)
         } else if ($row['block'] == 3)
         {
             $row['block_str'] = "<font color='black'>low</font>";
+        } else if ($row['block'] == 4)
+        {
+            $row['block_str'] = "error";
 	} else {
 	    $row['block_str'] = "unknown";
 	}
@@ -478,24 +537,26 @@ function get_raw_alerts_with_limit($agroupid, $limit)
     return $alerts;
 }
 
-function get_num_raw_alerts($status, $db_id = 0, $db_name = "", $db_type = "")
+function get_num_raw_alerts($status, $proxyid = 0, $db_id = 0, $db_name = "")
 {
-    $q = '';
-    if (!$db_type)
+    if ($db_id == 0)
     {
-      $q = "SELECT count(*) FROM alert, alert_group ".
-         "WHERE alert.agroupid = alert_group.agroupid AND status = $status";
-      if ($db_id || $db_name)
-      {
-      $q .= " AND db_name='$db_name'";
-      }
+      // no database selected
+      $q = "SELECT count(*) FROM alert, alert_group, proxy ".
+         "WHERE alert.agroupid = alert_group.agroupid AND alert_group.status = $status ".
+         "AND alert_group.proxyid=proxy.proxyid ";
+    } else if ($db_id != 1) {
+      // non default db selected
+      $q = "SELECT count(*) FROM alert, alert_group, proxy ".
+           "WHERE alert.agroupid = alert_group.agroupid AND alert_group.status = $status ".
+           "AND alert_group.proxyid=proxy.proxyid AND alert_group.db_name='$db_name'";
     } else {
-      $q = "SELECT count(*) ".
-           "FROM alert LEFT JOIN alert_group USING (agroupid) ".
-           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
+      // default db selected
+      $q = "SELECT count(*) FROM alert LEFT JOIN alert_group USING (agroupid) ".
+           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid) ".
            "LEFT JOIN db_perm USING (db_name) ".
            "WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
-           "AND alert_group.status = $status "; 
+           "AND alert_group.status = $status ";
     }
     $result = mysql_query($q);
     $row = mysql_fetch_array($result);
@@ -504,69 +565,86 @@ function get_num_raw_alerts($status, $db_id = 0, $db_name = "", $db_type = "")
     return $row[0];
 }
 
-function get_raw_alerts_bypage($from, $count, $status, $db_id = 0, $db_name = "", $db_type = "")
+function get_raw_alerts($header, $status, $proxyid = 0, $db_id = 0, $db_name = "", $from = 0, $count=10 )
 {
+    global $tokenname;
+    global $tokenid;
     $q = '';
-    if (!$db_type)
+    if ($db_id == 0)
     {
-      $q = "SELECT * FROM alert, alert_group ".
-         "WHERE alert.agroupid = alert_group.agroupid AND status = $status ".
-         (($db_id || $db_name) ? "AND db_name='$db_name' " : "" ).
-         "ORDER BY event_time DESC LIMIT $from, $count";
+      // no database selected
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name FROM alert, alert_group, proxy ".
+         "WHERE alert.agroupid = alert_group.agroupid AND alert_group.status = $status ".
+         "AND alert_group.proxyid=proxy.proxyid ";
+    } else if ($db_id != 1) {
+      // non default db selected
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name FROM alert, alert_group, proxy ".
+           "WHERE alert.agroupid = alert_group.agroupid AND alert_group.status = $status ".
+           "AND alert_group.proxyid=proxy.proxyid AND alert_group.db_name='$db_name'";
     } else {
-      $q = "SELECT alert.*,alert_group.* ".
-           "FROM alert LEFT JOIN alert_group USING (agroupid) ". 
-           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid AND dbtype='$db_type') ".
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name ".
+           "FROM alert LEFT JOIN alert_group USING (agroupid) ".
+           "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid) ".
            "LEFT JOIN db_perm USING (db_name) ".
            "WHERE (db_perm.db_name IS NULL OR alert_group.db_name='') ".
-           "AND alert_group.status = $status ".
-           "ORDER BY event_time DESC LIMIT $from, $count";
+           "AND alert_group.status = $status ";
     }
+    #  $q .= "AND alert_group.db_name='' ";
+    $q = add_query_sort($header, $q);
+    $q = add_query_limit($q, $from, $count );
+    #print "q: $q<br/>"; 
     $result = mysql_query($q);
 
     $alerts = array();
     $row = array();
     while ($row = mysql_fetch_array($result) )
     {
-        $row['description'] = join("; ", split("\n", $row['reason']));
+        $row['Description'] = join("; ", split("\n", $row['reason']));
         # fix .; inside the description string
-        $row['description'] = preg_replace("/\.;/",";",$row['description']);
+        $row['Description'] = preg_replace("/\.;/",";",$row['Description']);
+        $row['Description'] = '<a href="alert_view.php?agroupid='.$row['agroupid'].
+                              '&'.$tokenname.'='.$tokenid.'">'.$row['Description'].'</a>';
+
         $row['reason'] = str_replace("\n", "<br/>\n", $row['reason']);
         if ($row['block'] == 1)
         {
-            $row['block_str'] = "<font color='red'>blocked</font>";
+            $row['block'] = "<font color='red'>blocked</font>";
 	    $row['color'] = "#ffe9e9"; # a light red
         } else if ($row['block'] == 0)
         {
-            $row['block_str'] = "<font color='orange'>warning</font>";
+            $row['block'] = "<font color='orange'>warning</font>";
 	    $row['color'] = "#ffffe0"; # a light orange
         } else if ($row['block'] == 2)
         {
-            $row['block_str'] = "<font color='red'>high risk</font>";
+            $row['block'] = "<font color='red'>high risk</font>";
             $row['color'] = "#ffffe0"; # a light orange
         } else if ($row['block'] == 3)
         {
-            $row['block_str'] = "low";
+            $row['block'] = "low";
+            $row['color'] = "#f9f9f9"; # a light grey
+        } else if ($row['block'] == 4)
+        {
+            $row['block'] = "error";
             $row['color'] = "#f9f9f9"; # a light grey
         } else {
-            $row['block_str'] = "unknown";
+            $row['block'] = "unknown";
 	    $row['color'] = "#f9f9f9"; # a light grey
         }
 
-        if (strlen($row['description']) > 120)
-        {
-            $row['short_description'] = substr($row['description'], 0, 100)."...";
-        } else {
-            $row['short_description'] = $row['description'];
-        }
-        if (strlen($row['query']) > 85)
-        {
-            $row['short_query'] = htmlspecialchars(substr($row['query'], 0, 80)."...");
-        } else {
-            $row['short_query'] = htmlspecialchars($row['query']);
-        }
+        // if (strlen($row['description']) > 120)
+        //{
+        //    $row['short_description'] = substr($row['description'], 0, 100)."...";
+        //} else {
+        //    $row['short_description'] = $row['description'];
+        //}
+        //if (strlen($row['query']) > 85)
+        //{
+        //    $row['short_query'] = htmlspecialchars(substr($row['query'], 0, 80)."...");
+        //} else {
+        //    $row['short_query'] = htmlspecialchars($row['query']);
+        //}
         $row['query'] = htmlspecialchars($row['query']);
-        $row['pattern'] = htmlspecialchars($row['pattern']);
+        //$row['pattern'] = htmlspecialchars($row['pattern']);
 
         $alerts[] = $row;
     }
@@ -788,11 +866,16 @@ function get_local_db_menu($db_name = "", $db_id = 0)
   } else {
     $msg .= "<a href='rawalert_list.php?db_id=$db_id&$tokenname=$tokenid'>Alerts</a> | ";
   }
-  if ($script == "alert_list.php")
+  if ($script == "whitelist.php")
   {
     $msg .= "<strong>Whitelist</strong> | ";
   } else {
-    $msg .= "<a href='alert_list.php?db_id=$db_id&status=1&$tokenname=$tokenid'>Whitelist</a> | ";
+    $msg .= "<a href='whitelist.php?db_id=$db_id&$tokenname=$tokenid'>Whitelist</a> | ";
+  }
+  if ($script == "whitelist_entry_view.php")
+  {
+    //$msg .= "<strong>Whitelist</strong> | ";
+    //$msg .= "<a href='whitelist.php?db_id=$db_id&$tokenname=$tokenid'>Whitelist</a> | ";
   }
   if ($script == "db_edit.php")
   {
