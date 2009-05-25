@@ -33,7 +33,7 @@ if ($db_id)
 $status = 0;
 
 $header = array();
-$header[] = array('field' => 'event_time', 'title' => 'Date & Time', 'size'=> 150, 'sort' => 'asc');
+$header[] = array('field' => 'event_time', 'title' => 'Date & Time', 'size'=> 150, 'sort' => 'desc');
 $header[] = array('field' => 'proxyname', 'title' => 'Listener', 'size' => 100);
 $header[] = array('field' => 'db_name', 'title' => 'DB', 'size' => 100);
 #$header[] = array('field' => 'user', 'title' => 'User', 'size' => 100);
