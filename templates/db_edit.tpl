@@ -17,7 +17,7 @@
 </tr>
 
 { if $DB_ProxyID }
-<tr><td colspan=2>&nbsp;</td></t
+<tr><td colspan=2>&nbsp;</td></tr>
 <tr>
  <td>GreenSQL Listener:</td>
  <td>
