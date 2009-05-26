@@ -29,14 +29,14 @@ function display_table($header, $rows)
         {
           $out .= '<a href="'.url_change_sort_order($row['field'], 'desc').
                   '" title="Sort by '.$row['title'].'">'.$row['title'].'</a>';
-          $out .= '<img src="images/arrow-asc.png">';
+          $out .= '<img src="images/arrow-asc.gif">';
         }
         else
         {
           $out .= '<a href="'.url_change_sort_order($row['field'], 'asc').
                   '" title="Sort by '.$row['title'].'">'.$row['title'].'</a>';
 
-          $out .= '<img src="images/arrow-desc.png">';
+          $out .= '<img src="images/arrow-desc.gif">';
         }
       } else {
         $out .= '<a href="'.url_change_sort_order($row['field'], 'asc').
@@ -59,7 +59,7 @@ function display_table($header, $rows)
       {
         $out .= '<td style="overflow:hidden;" nowrap>';
       } else {
-        $out .= '<td width=50>';
+        $out .= '<td>';
       }
       if (isset($row2['field']))
       {
