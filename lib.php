@@ -674,11 +674,13 @@ function approve_alert($agroupid, $alert)
         $q = "INSERT INTO db_perm (proxyid, db_name) ".
 	     "values (".$alert['proxyid'].",".
 	     "'".mysql_escape_string($alert['db_name'])."')"; 
-	#print $q;
-	$result = mysql_query($q);
+	     #print $q;
+       $result = mysql_query($q);
     }
+		$pattern = preg_replace(array('/&lt;/s', '/&gt;/s', '/&quot;/s'), array('<', '>', '"'), $alert['pattern']);
+		$pattern = mysql_escape_string($pattern);
     $q = "INSERT INTO query (proxyid,perm,db_name,query) ".
-    "VALUES(".$alert['proxyid'].",1,'".$alert['db_name']."','".$alert['pattern']."')";
+    "VALUES(".$alert['proxyid'].",1,'".$alert['db_name']."','".$pattern."')";
     $result = mysql_query($q);
 
     $q = "UPDATE alert_group set status=1 WHERE agroupid=$agroupid";
