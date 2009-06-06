@@ -38,7 +38,17 @@ $header[] = array('field' => 'block', 'title' => 'Status', 'size' => 100);
 
 $alerts = get_raw_alerts($header, $status);
 $smarty->assign("alerts", display_table($header, $alerts));
-
+if ($num_alerts >= 10)
+{
+  global $tokenname;
+  global $tokenid;
+  $more_alerts = 'rawalert_list.php?p=1&'.$tokenname.'='.$tokenid;
+  if (isset($_REQUEST['sort']))
+    $more_alerts .= '&sort='.$_REQUEST['sort'];
+  if (isset($_REQUEST['order']))
+    $more_alerts .= '&order='.$_REQUEST['order'];
+  $smarty->assign("more_alerts", $more_alerts);
+}
 $news = get_news();
 $smarty->assign("news", $news);
 
