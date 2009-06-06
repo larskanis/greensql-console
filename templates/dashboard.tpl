@@ -24,7 +24,7 @@ Number of databases : {$NUM_Dbs}<br/>
 <h4>Alerts</h4>
 {$alerts}
 { if $NUM_Alers > 10 }
-<center><a href="rawalert_list.php?p=1&{$TokenName}={$TokenID}">More</a></center>
+<center><a href="{$more_alerts}">More</a></center>
 { /if }
 <h4>News</h4>
 <table cellspacing=0 cellpadding=0 width="100%" id="table_cont">
