@@ -480,14 +480,23 @@ function get_alert($agroupid)
     $q = "SELECT alert_group.*,proxy.proxyname, db_perm.dbpid as 'db_id' ".
          "FROM alert_group, proxy, db_perm ".
          "WHERE alert_group.proxyid=proxy.proxyid AND agroupid = $agroupid ".
-         "AND ((alert_group.db_name = db_perm.db_name AND proxy.proxyid = db_perm.proxyid ) OR ".
-               "( db_perm.dbpid = 1)) ".
+         "AND alert_group.db_name = db_perm.db_name AND proxy.proxyid = db_perm.proxyid ".
          "ORDER BY update_time DESC";
     $result = mysql_query($q);
 
     $row = array();
     $row = mysql_fetch_array($result);
     
+    if (!$row)
+    {
+      $q = "SELECT alert_group.*,proxy.proxyname, db_perm.dbpid as 'db_id' ".
+         "FROM alert_group, proxy, db_perm ".
+         "WHERE alert_group.proxyid=proxy.proxyid AND agroupid = $agroupid ".
+         "AND db_perm.dbpid = 1 ".
+         "ORDER BY update_time DESC";
+      $result = mysql_query($q);
+      $row = mysql_fetch_array($result);
+    }
     if (!$row)
         return $row;
     if (strlen($row['pattern']) > 85)
@@ -677,10 +686,13 @@ function approve_alert($agroupid, $alert)
 	     #print $q;
        $result = mysql_query($q);
     }
-		$pattern = preg_replace(array('/&lt;/s', '/&gt;/s', '/&quot;/s'), array('<', '>', '"'), $alert['pattern']);
-		$pattern = mysql_escape_string($pattern);
+
+    # decode html tags
+    $pattern = preg_replace(array('/&lt;/s', '/&gt;/s', '/&quot;/s'), array('<', '>', '"'), $alert['pattern']);
+    $pattern = mysql_escape_string($pattern);
+
     $q = "INSERT INTO query (proxyid,perm,db_name,query) ".
-    "VALUES(".$alert['proxyid'].",1,'".$alert['db_name']."','".$pattern."')";
+         "VALUES(".$alert['proxyid'].",1,'".$alert['db_name']."','".$pattern."')";
     $result = mysql_query($q);
 
     $q = "UPDATE alert_group set status=1 WHERE agroupid=$agroupid";
