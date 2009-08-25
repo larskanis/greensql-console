@@ -26,7 +26,7 @@ $log_file = "/var/log/greensql.log";
 # Number of lines to show when viewing log file.
 $num_log_lines = 200;
 
-# Number of rows to show in tables
+# Number of lines to show when displaying a table.
 $limit_per_page = 10;
 
 # Generated web pages cache
