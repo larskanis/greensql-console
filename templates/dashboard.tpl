@@ -40,6 +40,6 @@ Number of databases : {$NUM_Dbs}<br/>
 </tr>
 {/section}
 { else }
-<td colspan="2">No news available.</td>
+<tr><td colspan="2">No news available.</td></tr>
 { /if }
 </table>
