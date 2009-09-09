@@ -59,7 +59,7 @@ function display_table($header, $rows)
       {
         $out .= '<td style="overflow:hidden;" nowrap>';
       } else {
-        $out .= '<td>';
+        $out .= '<td nowrap>';
       }
       if (isset($row2['field']))
       {
