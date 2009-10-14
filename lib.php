@@ -287,7 +287,7 @@ function add_proxy($proxy)
     "'".$proxy['backend_server']."', ".
     "INET_ATON('".$proxy['backend_ip']."'), ".
     $proxy['backend_port'].", ".
-    "'mysql',0)"; 
+    "'".$proxy['dbtype']."',0)"; 
     $result = mysql_query($q);
 }
 
@@ -314,7 +314,7 @@ function update_proxy($proxy)
     "backend_server = '".$proxy['backend_server']."', ".
     "backend_ip = INET_ATON('".$proxy['backend_ip']."'), ".
     "backend_port = ".$proxy['backend_port'].", ".
-    "dbtype = 'mysql', ".
+    "dbtype = '".$proxy['dbtype']."', ".
     "status = 0 WHERE proxyid = ".$proxy['proxyid'];
     $result = mysql_query($q);
 }
