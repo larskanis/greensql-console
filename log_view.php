@@ -14,7 +14,6 @@ $error = "";
 $log = read_log($log_file, $num_log_lines, $error);
 if ($error)
 {
-    print "error\n";
     $msg = "<font color='red'>$error</font>";
     $smarty->assign("msg", $msg);
 }
