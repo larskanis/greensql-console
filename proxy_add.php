@@ -8,7 +8,7 @@ global $smarty;
 $proxy_id = 0;
 if (isset($_GET['proxyid']))
 {
-    $proxy_id = intval($_GET['proxyid']);
+    $proxy_id = abs(intval($_GET['proxyid']));
 }
 $proxy = array();
 #print_r($_POST);
@@ -31,8 +31,13 @@ if (isset($_POST['submit']))
     $proxy['backend_port']   = intval(trim($_POST['backend_port']));
     $proxy['proxyname']      = trim(htmlspecialchars($_POST['proxyname']));
     $proxy['proxyid']        = intval(trim($_POST['proxyid']));
+    $proxy['dbtype']         = strtolower(trim($_POST['dbtype']));
     #print_r($proxy);
 
+    if ($proxy['dbtype'] != 'mysql' && $proxy['dbtype'] != 'pgsql')
+    {
+      $proxy['dbtype'] = 'mysql';
+    } 
     if (strlen($proxy['proxyname']) == 0)
     {
         $error .= "Listener Name is empty.<br/>\n";
@@ -119,6 +124,7 @@ $smarty->assign("proxies", $proxies);
 if (count($proxy) > 1)
 {
   $smarty->assign("PROXY_Name",         $proxy['proxyname']);
+  $smarty->assign("PROXY_DBType",         $proxy['dbtype']);
   $smarty->assign("PROXY_ID",           $proxy['proxyid']);
 #  $smarty->assign("PROXY_FrontendIP",   $proxy['frontend_ip']);
   $smarty->assign("PROXY_FrontendPort", $proxy['frontend_port']);
