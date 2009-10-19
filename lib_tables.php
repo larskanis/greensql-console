@@ -155,7 +155,7 @@ function url_change_sort_order($sort_field, $sort_order)
   global $tokenname;
 
   $url = $_SERVER['REQUEST_URI'];
-  if (!url)
+  if (!$url)
   {
     $url = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
   }
