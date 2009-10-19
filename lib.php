@@ -2,11 +2,11 @@
 
 include_once("lib_tables.php");
 
-if (function_exists('date_default_timezone_set'))
+if (substr(phpversion(),0,1) == "5" && function_exists('date_default_timezone_set'))
 {
   #set default time zone - this prevents PHP5 from 
   #showing strange warning messages
-  #date_default_timezone_set("America/Los_Angeles");
+  date_default_timezone_set("America/Los_Angeles");
 }
 
 # do not start session if it was started in login.php file
@@ -76,7 +76,10 @@ function generate_session_token()
   global $tokenid;
   #generate next token
   #a token will be changed every hour
-  $tokenid = md5($_SESSION['user'].date("G j-m-Y").session_id());
+  if (isset($_SESSION['user']))
+    $tokenid = md5($_SESSION['user'].date("G j-m-Y").session_id());
+  else
+    $tokenid = md5(date("G j-m-Y").session_id());
   $smarty->assign("TokenName", $tokenname);
   $smarty->assign("TokenID", $tokenid );
   $_SESSION[$tokenname] = $tokenid;
