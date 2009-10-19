@@ -193,7 +193,7 @@ function get_pager($numResults)
     $limit_per_page = 10;
 
   $url = $_SERVER['REQUEST_URI'];
-  if (!url)
+  if (!$url)
   {
     $url = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
   }
@@ -211,6 +211,7 @@ function get_pager($numResults)
 
   // update list of pages
   $num_pages = ceil($numResults/$limit_per_page)+1;
+  $list_pages = '';
   if ($start_id > 2)
     $from_id = $start_id - 1;
   else
