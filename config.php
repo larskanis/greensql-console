@@ -4,7 +4,7 @@
 #$demo_version = 1;
 
 # greensql version
-$version = "0.6.0";
+$version = "0.6.2";
 
 # MySQL Database IP address
 $db_host = "127.0.0.1";
