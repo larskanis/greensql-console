@@ -9,6 +9,11 @@ of Apache webserver configured to work with PHP4 or PHP5.
 In addition access to MySQL server used to store greensql-fw
 configuration is required.
 
+In debian/Ubuntu make sure that php5-mysql is installed.
+You can do it using the following command:
+
+shell> sudo apt-get install php5-mysql
+
 
 Application Installation
 ========================
