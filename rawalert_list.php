@@ -25,10 +25,14 @@ $smarty->assign("Page","rawalert_list.tpl");
 
 $dbs = get_databases();
 $smarty->assign("databases", $dbs);
+$db = array();
 if ($db_id)
 {
   $db  = get_database($db_id);
   $smarty->assign("DB_Menu", get_local_db_menu($db['db_name'], $db_id) );
+} else {
+  $db['proxyid'] = 0;
+  $db['db_name'] = '';
 }
 $status = 0;
 
