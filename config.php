@@ -4,18 +4,21 @@
 #$demo_version = 1;
 
 # greensql version
-$version = "0.6.2";
+$version = "1.2.0";
 
-# MySQL Database IP address
+# Database Type
+$db_type = "mysql";
+
+# Database IP address
 $db_host = "127.0.0.1";
 
-#MySQL Database Port Value.
-$db_port = 3306;
+# Database Port Value.
+#$db_port = 3306;
 
-# MySQL database name used to store greensql confiuration and alerts
+# database name used to store greensql confiuration and alerts
 $db_name = "greendb";
 
-# MySQL database user and password
+# database user and password
 $db_user = "green";
 $db_pass = "pwd";
 
@@ -31,5 +34,8 @@ $limit_per_page = 10;
 
 # Generated web pages cache
 $cache_dir = "templates_c";
+
+# Smarty directory location (optional)
+$smarty_dir = "/usr/share/php/smarty";
 
 ?>

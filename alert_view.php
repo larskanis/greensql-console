@@ -11,11 +11,21 @@ $msg = "";
 $agroupid = 0;
 if (isset($_REQUEST['agroupid']))
 {
-    $agroupid = intval($_REQUEST['agroupid']);
+    $agroupid = abs(intval($_REQUEST['agroupid']));
+}
+$alertid=0;
+if (isset($_REQUEST['alertid']))
+{
+    $alertid = abs(intval($_REQUEST['alertid']));
 }
 
 $smarty->assign("Name","Vew Alert Pattern");
 $smarty->assign("Page","alert_view.tpl");
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_db_menu());
+
+$dbs = get_databases_list();
+$smarty->assign("databases", $dbs);
 
 $aler = array();
 $alert = get_alert($agroupid);
@@ -34,7 +44,7 @@ if (isset($_POST['action']) && $_POST['action'] == "approve" && $agroupid)
     {
         $msg = "<font color='red'>$error</font>";
     } else {
-        if ($_POST['submit'] == "Ignore this query")
+        if ($_POST['submit'] == "Hide Pattern")
         {
             ignore_alert($agroupid);
             $alert['status'] = 2;
@@ -44,7 +54,25 @@ if (isset($_POST['action']) && $_POST['action'] == "approve" && $agroupid)
         }
     }
     $smarty->assign("msg", $msg);
+} else if (isset($_POST['action']) && $_POST['action'] == "delete" && $agroupid != 0 && $alertid != 0)
+{
+
+    if ($demo_version)
+    {
+        $error .= "You can not change alert status in demo mode.<br/>\n";
+    }
+
+    if ($error)
+    {
+        $msg = "<font color='red'>$error</font>";
+    } else {
+        //$alert['status'] = 2;
+        delete_raw_alert($agroupid,$alertid);
+    }
+    $smarty->assign("msg", $msg);
 }
+
+
 #check if this query has bad format
 if (strstr($alert['pattern'], "??") !== FALSE)
 {
@@ -58,9 +86,6 @@ if (strstr($alert['pattern'], "??") !== FALSE)
 #    header("location: alert_list.php");
 #    exit;
 #}
-
-$dbs = get_databases();
-$smarty->assign("databases", $dbs);
 
 $smarty->assign("AGROUP_agroupid", $alert['agroupid']);
 $smarty->assign("AGROUP_update_time", $alert['update_time']);

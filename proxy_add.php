@@ -16,8 +16,12 @@ $proxy = array();
 if ($proxy_id && $proxy_id != 0)
 {
     $proxy = get_proxy($proxy_id);
-    $smarty->assign("Name","Edit GreenSQL Listener: ".$proxy['proxyname']);
+    $smarty->assign("Name","Edit GreenSQL Proxy: ".$proxy['proxyname']);
+} else {
+    $smarty->assign("SecondaryMenu", get_top_db_menu());
 }
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_db_menu());
 $msg = "";
 $error = "";
 
@@ -40,11 +44,11 @@ if (isset($_POST['submit']))
     } 
     if (strlen($proxy['proxyname']) == 0)
     {
-        $error .= "Listener Name is empty.<br/>\n";
+        $error .= "Proxy Name is empty.<br/>\n";
     }
     else if (!ereg("^[a-zA-Z0-9_\.\ ]+$", $proxy['proxyname']))
     {
-        $error .= "Listener Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', ' ' and '.'.<br/>\n";
+        $error .= "Proxy Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', ' ' and '.'.<br/>\n";
     }
 
     if (strlen($proxy['backend_server']) == 0)
@@ -91,32 +95,42 @@ if (isset($_POST['submit']))
         $error = add_proxy($proxy);
 	if (!$error)
 	{
-	    $msg = "Listener has been succesfully added.";
+	    $msg = "Proxy has been succesfully added.";
 	}
     } else if ($error == "")
     {
         $error = update_proxy($proxy);
 	if (!$error)
 	{
-	    $msg = "Listener has been succesfully updated.";
+	    $msg = "Proxy has been succesfully updated.";
 	}
     }
     if ($error)
         $msg = "<font color='red'>$error</font>";
     
-    $smarty->assign("Name","Edit listener: ".$proxy['proxyname']);
+    $smarty->assign("Name","Edit proxy: ".$proxy['proxyname']);
     $smarty->assign("msg", $msg); 
+
+    $proxy = get_last_proxy();
+    $proxyid = $proxy['proxyid'];
+    $_SESSION['msg'] = $msg;
+    if($_POST['type'] == "proxy_add")
+    {
+      header('Location: db_list.php?'.$tokenname.'='.$tokenid);
+    }
+    else header('Location: db_add.php?type=newdb&proxyid='.$proxyid.'&'.$tokenname.'='.$tokenid);
 }
 
 if (!$proxy_id)
 {
     $proxy['frontend_ip'] = "127.0.0.1";
-    $smarty->assign("Name","Add listener");
+    $smarty->assign("Name","Add Proxy");
 }
 
 $smarty->assign("Page","proxy_add.tpl");
+$smarty->assign("PrimaryMenu", get_primary_menu());
 
-$dbs = get_databases();
+$dbs = get_databases_list();
 $smarty->assign("databases", $dbs);
 
 $proxies = get_proxies();
@@ -133,6 +147,8 @@ if (count($proxy) > 1)
   $smarty->assign("PROXY_BackendPort",  $proxy['backend_port']);
 }
 $smarty->assign("PROXY_FrontendIP",   $proxy['frontend_ip']);
+
+$_SESSION['msg'] = $msg;
 
 $help_msg = get_section_help("proxy_add");
 if ($help_msg)

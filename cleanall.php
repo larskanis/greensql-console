@@ -10,6 +10,8 @@ $msg = "";
 
 $smarty->assign("Name","Clean GreenSQL alerts");
 $smarty->assign("Page","cleanall.tpl");
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_system_menu());
 
 $msg = "";
 if (isset($_POST['submit']))
@@ -27,9 +29,6 @@ if (isset($_POST['submit']))
 
     $smarty->assign("msg", $msg);
 }
-
-$dbs = get_databases();
-$smarty->assign("databases", $dbs);
 
 $help_msg = get_section_help("cleanall");
 if ($help_msg)

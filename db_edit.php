@@ -4,8 +4,9 @@ require 'lib.php';
 require 'help.php';
 
 global $demo_version;
-
 global $smarty;
+global $tokenid;
+global $tokenname;
 
 $db_id = 0;
 if (isset($_GET['db_id']))
@@ -14,7 +15,8 @@ if (isset($_GET['db_id']))
 }
 if ($db_id == 0)
 {
-  $db_id = 1;
+  header("location: db_list.php?$tokenname=$tokenid");
+  exit;
 }
 
 $db  = get_database($db_id);
@@ -88,7 +90,7 @@ if (isset($_POST['submit']))
     if (strlen($db['db_name']) == 0)
     {
        $error .= "Database name can not be empty.<br/>\n";
-    } else if (!ereg("^[a-zA-Z0-9_]+$",$db['db_name']))
+    } else if (!ereg("^[a-zA-Z0-9_\ ]+$",$db['db_name']))
     {
         $error .= "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
     }
@@ -100,7 +102,7 @@ if (isset($_POST['submit']))
        $db['status'] = $block_mode;
     }
     # default database - do not change it's status
-    if ($db['proxyid'] == 0)
+    if ($db['proxyid'] == 0 && $db['status'] >= 10)
     {
        $db['status'] = 0;  
     }
@@ -119,18 +121,22 @@ if (isset($_POST['submit']))
     $smarty->assign("msg", $msg);
 }
 
-$dbs = get_databases();
+$dbs = get_databases_list();
 
 $smarty->assign("databases", $dbs);
 
 $smarty->assign("Name","Edit database - ".$db['db_name']);
 $smarty->assign("Page","db_edit.tpl");
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_db_menu());
+
 $smarty->assign("DB_Name", $db['db_name']);
 $smarty->assign("DB_ProxyName", $db['proxyname']);
 $smarty->assign("DB_ProxyID", $db['proxyid']);
 $smarty->assign("DB_Listener", $db['listener']);
 $smarty->assign("DB_Backend", $db['backend']);
 $smarty->assign("DB_Type", $db['dbtype']);
+$smarty->assign("DB_SysDBType", $db['sysdbtype']);
 $smarty->assign("DB_ID", $db_id);
 if ($db_id)
 {
@@ -154,32 +160,36 @@ $smarty->assign("DB_BlockQ", $db['block_q_perm']);
 $proxies = get_proxies();
 $ids = array();
 $names = array();
+$db_proxies = array();
 
 foreach ($proxies as $proxy)
 {
-    $ids[] = $proxy['proxyid'];
-    $names[] = $proxy['proxyname'];
+    $db_proxies[] = array('id'=> $proxy['proxyid'], 'name' => $proxy['proxyname']);
 }
-
-$smarty->assign("option_values", $ids);
-$smarty->assign("option_output", $names);
-$smarty->assign("option_selected", $db['proxyid']);
+$smarty->assign("proxies", $db_proxies);
 
 $modes = get_db_modes();
 $ids = array_keys($modes);
-$names = array();
-foreach ($modes as $mode)
+$db_modes = array();
+foreach ($ids as $id)
 {
-  $names[] = $mode['mode'];
+  if ($id < 10 || ($id >= 10 && $db['sysdbtype'] == 'user_db'))
+    $db_modes[] = array('id'=> $id, 'name' => $modes[$id]['mode']);
 }
 
-$smarty->assign("block_values", $ids);
-$smarty->assign("block_output", $names);
+$smarty->assign("block_modes", $db_modes);
 if ($db['status'])
-  $smarty->assign("block_selected", $db['status']);
+  $smarty->assign("block_mode", $db['status']);
 else
-  $smarty->assign("block_selected", 0);
+  $smarty->assign("block_mode", 0);
 
+
+$help_msg = get_section_help("db_edit");
+if ($help_msg)
+{
+  $smarty->assign("HelpPage","help.tpl");
+  $smarty->assign("HelpMsg",$help_msg);
+}
 
 $smarty->display('index.tpl');
 ?>

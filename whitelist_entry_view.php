@@ -17,6 +17,8 @@ if (isset($_REQUEST['queryid']))
 
 $smarty->assign("Name","Vew Whitelist Entry");
 $smarty->assign("Page","whitelist_entry_view.tpl");
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_db_menu());
 
 $entry = array();
 $entry = get_whitelist_entry($queryid);
@@ -53,7 +55,7 @@ if (isset($_POST['action']) && $_POST['action'] == "delete" &&
 #    exit;
 #}
 
-$dbs = get_databases();
+$dbs = get_databases_list();
 $smarty->assign("databases", $dbs);
 
 $smarty->assign("entry_queryid", $queryid);

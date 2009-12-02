@@ -21,7 +21,7 @@ if (isset($_POST['login']) && isset($_POST['user']) && isset($_POST['pass']))
     {
         global $tokenid;
         global $tokenname;
-        $_SESSION['userid']= $u['userid'];
+        $_SESSION['userid']= $u['adminid'];
         $_SESSION['user'] = $user;
         generate_session_token();
 	header("location: dashboard.php?$tokenname=$tokenid");
@@ -36,23 +36,28 @@ if (isset($_POST['login']) && isset($_POST['user']) && isset($_POST['pass']))
 $smarty->assign("Name","GreenSQL");
 $smarty->assign("demo",$demo_version);
 $error = "";
-
 $smarty->display('login.tpl');
 
 # download news once a day
 {
   $app = 'get_news.php';
   global $cache_dir;
-  $file = $cache_dir . DIRECTORY_SEPARATOR . "news.txt";
-
-  if (file_exists($file) && filesize($file) > 0)
+  $news_file = $cache_dir . DIRECTORY_SEPARATOR . "news.txt";
+  $twitts_file = $cache_dir . DIRECTORY_SEPARATOR . "twitts.txt";
+  
+  if ((file_exists($news_file) && filesize($news_file) > 0) &&
+      (file_exists($twitts_file) && filesize($twitts_file) > 0))
   {
     // we will fetch list of news once a day
     $stat = array();
-    $stat = stat($file);
+    $stat = stat($news_file);
     $file_mdate = date ("F d Y", $stat['mtime']);
     $today = date ("F d Y", time());
-    if ($today == $file_mdate)
+
+    $stat = stat($twitts_file);
+    $tfile_mdate = date ("F d Y", $stat['mtime']);
+
+    if ($today == $file_mdate && $today == $tfile_mdate)
     {
       return;
     }

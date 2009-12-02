@@ -11,7 +11,8 @@ function display_table($header, $rows)
   $sort_order = "asc";
   $sorted = get_sort_order($header, $sort_field, $sort_order);
 
-  $out = '<table cellspacing=0 cellpadding=0 width="100%" id="table_cont">';
+  $out = '<table cellspacing=0 cellpadding=0 width="100%" id="table_cont"';
+
   $out .= "\n<tr>";
   foreach ($header as $row)
   {
@@ -57,7 +58,7 @@ function display_table($header, $rows)
     {
       if (isset($row2['size']) && $row2['size'] == 'auto')
       {
-        $out .= '<td style="overflow:hidden;" nowrap>';
+        $out .= '<td style="overflow:hidden;padding-left:4px;" nowrap>';
       } else {
         $out .= '<td nowrap>';
       }
@@ -84,10 +85,17 @@ function display_table($header, $rows)
 #
 function add_query_limit($q, $from, $count )
 {
+  global $db_type;
+
   # check if we need to add counter
   if ($from == 0 && $count == 0)
     return $q;
-  return $q . " LIMIT $from, $count";
+
+  if ($db_type == "pgsql" || $db_type == "postgresql") {
+    return $q . " LIMIT $count OFFSET $from";
+  } else {
+    return $q . " LIMIT $from, $count";
+  }
 }
 
 #

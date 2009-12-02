@@ -6,9 +6,9 @@ global $demo_version;
 global $smarty;
 
 $userid = 0;
-if (isset($_SESSION['userid']))
+if (isset($_GET['user_id']))
 {
-    $userid = intval($_SESSION['userid']);
+    $userid = intval($_GET['user_id']);
 }
 
 $user = get_user($userid);
@@ -20,7 +20,6 @@ if (isset($_POST['submit']))
     #data posted, db need to be updated
     $user['name'] = trim(htmlspecialchars($_POST['name']));
     $user['email'] = trim(htmlspecialchars($_POST['email']));
-    
     if (strlen($user['name']) == 0)
     {
         $error .= "User can not be empty.<br/>\n";
@@ -76,12 +75,10 @@ if (isset($_POST['submit']))
         $msg = "<font color='red'>$error</font>";
 
     $smarty->assign("msg", $msg);
-
 }
 
-$dbs = get_databases();
-
-$smarty->assign("databases", $dbs);
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_system_menu());
 
 $smarty->assign("Name","View user - ".$user['name']);
 $smarty->assign("Page","user_edit.tpl");

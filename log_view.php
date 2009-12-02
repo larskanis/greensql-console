@@ -9,6 +9,9 @@ $msg = "";
 
 $smarty->assign("Name","View GreenSQL Log file");
 $smarty->assign("Page","log_view.tpl");
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_system_menu());
+
 $error = "";
 
 $log = read_log($log_file, $num_log_lines, $error);
@@ -23,9 +26,6 @@ foreach ($log as $l)
 {
     $log_data .= $l;
 }
-
-$dbs = get_databases();
-$smarty->assign("databases", $dbs);
 
 $smarty->assign("Log", $log_data);
 
