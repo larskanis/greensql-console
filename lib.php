@@ -95,8 +95,11 @@ function db_connect()
 {
   global $pgsql_db;
   global $db_type;
-
-  include 'config.php';
+  global $db_user;
+  global $db_pass;
+  global $db_host;
+  global $db_port;
+  global $db_name;
 
   if (! $db_type) { $db_type = "mysql"; }
 
@@ -143,6 +146,9 @@ function validate_installation()
     {
         $msg .= "<font color='red'>$db_error</font><br/>";
         $msg .= "Please alter <i>config.php</i> file with a proper database settings.<br/>This file is found in the application directory.<br/>";
+        $msg .= "In addition, SELinux can prevent php to connect to MySQL database.<br/>";
+        $msg .= "Check if SELinux is enabled: /usr/sbin/sestatus -v";
+        $msg .= "In case it is, you can just type the command: setsebool httpd_can_network_connect_db=1";
         $bad = 1;
     } else {
         $msg .= "Connection to <font color='green'>$db_name</font> established.<br/>\n";
@@ -845,6 +851,8 @@ function get_num_raw_alerts($status, $proxyid = 0, $sysdbtype = 'user_db', $db_i
     if ($status != -1)
     {
         $q .= " AND alert_group.status = $status ";
+    } else {
+        $q .= " AND alert_group.status IN (0,2) ";
     }
 
     $result = db_query($q);
@@ -897,7 +905,10 @@ function get_raw_alerts($header, $status, $sysdbtype = 'user_db', $proxyid = 0, 
     if ($status != -1)
     {
         $q .= " AND alert_group.status = $status ";
+    } else {
+        $q .= " AND alert_group.status IN (0,2) ";
     }
+
     #  $q .= "AND alert_group.db_name='' ";
     $q = add_query_sort($header, $q);
     $q = add_query_limit($q, $from, $count );

@@ -40,3 +40,26 @@ You can simply run the following command (in a shell):
 
 shell> chmod 0777 templates_c
 
+SELinux Section
+===============
+1. mysql fails to connect
+
+If SELinux is installed on your server, it can prevent the apache php
+module from connecting to the MySQL server. You can check whether 
+SELinux is enabled by running: 
+
+shell> /usr/sbin/sestatus -v
+
+In case it is, you can just type the command: 
+
+shell> setsebool httpd_can_network_connect_db=1
+
+2. templates_c directory is not writable
+The caching directory must be placed in within the /tmp/ directory.
+
+shell> mkdir /tmp/greensql_templates
+
+shell> chmod 0777 /tmp/greensql_templates/
+
+shell> ln -s /tmp/greensql_templates templates_c
+
