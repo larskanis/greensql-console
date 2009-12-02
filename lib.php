@@ -1317,11 +1317,6 @@ function get_local_db_menu($db_name = "", $db_id = 0)
   } else {
     $msg .= "<a href='whitelist.php?db_id=$db_id&$tokenname=$tokenid'>Whitelist</a> | ";
   }
-  if ($script == "whitelist_entry_view.php")
-  {
-    $msg .= "<strong>Whitelist</strong> | ";
-    $msg .= "<a href='whitelist.php?db_id=$db_id&$tokenname=$tokenid'>Whitelist</a> | ";
-  }
   if ($script == "db_edit.php")
   {
     $msg .= "<strong>Settings</strong>";

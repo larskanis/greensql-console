@@ -132,14 +132,16 @@ border-width:1px;
 border-style: hidden;
 border-collapse: collapse;
 }
+
 table td {
 font-size: 18px;
 vertical-align: top; 
 }
+
 #table_cont {
 table-layout:fixed;
 font-size: 9pt;
-border:solid 1px black;
+border: solid 1px black;
 }
 
 #table_cont tr td A:link {

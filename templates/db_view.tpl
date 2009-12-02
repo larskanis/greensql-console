@@ -24,7 +24,8 @@ Change db: <select style="width:232px;height:21px;font-size:15px" onchange="loca
   <td>{$DB_BlockStatus_Extra}</td>
 </tr>
 </table>
-<BR style="line-height:15px;"/>
+
+<BR style="line-height:15px;"/> 
 
 <div class="dashboard-block">
 <table cellspacing=0 cellpadding=0 id="table_cont" width="100%">
@@ -46,7 +47,7 @@ Change db: <select style="width:232px;height:21px;font-size:15px" onchange="loca
   <td style="text-align:center;">{$DB_Drop}</td>
 </tr>
 <tr>
-  <td>Other sensitive commands: 
+  <td>Other sensitive commands:</td>
   <td style="text-align:center;">{$DB_BlockQ}</td>
 </tr>
 <tr><td colspan="2" style="text-align:center;">
@@ -55,8 +56,9 @@ Change db: <select style="width:232px;height:21px;font-size:15px" onchange="loca
 </table>
 </div>
 
+ <div class="dashboard-space">&nbsp;</div>  
+
 { if $DB_ProxyID }
-<div class="dashboard-space">&nbsp;</div>
 <div class="dashboard-block">
 <table cellspacing=0 cellpadding=0 id="table_cont" width="100%">
 <tr><th style="text-align:center;">Proxy Settings</th><th style="text-align:center;" width="40%">Value</th></tr>
@@ -86,15 +88,11 @@ Change db: <select style="width:232px;height:21px;font-size:15px" onchange="loca
 </table>
 </div>
 { else }
-<div class="dashboard-space">&nbsp;</div>
 <div class="dashboard-block">
 <table cellspacing=0 cellpadding=0 id="table_cont" width="100%">
 <tr><th colspan="2" style="text-align:center;">Proxy Settings</th></tr>
-<tr>
-  <td colspan="2" style="text-align:center;line-height:100px;">No Proxy Available</td>
-</tr>
+<tr><td colspan="2" style="text-align:center;line-height:167px">No Proxy Available</td></tr>
 </table>
 </div>
-
 { /if }
 
