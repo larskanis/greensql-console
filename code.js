@@ -69,3 +69,11 @@ help_win.style.display='none';
 show_win.style.display='block';
 setCookie('show_help','0',10);
 }
+
+function ShowProxy(tokenname,tokenid){
+    var ref = "";
+    if(document.getElementsByName("proxyid")[0].value == 0)
+        ref = 'db_add.php?type=newproxy&' + tokenname + '=' + tokenid;            
+    else ref = 'db_add.php?type=newdb&proxyid=' + document.getElementsByName("proxyid")[0].value + '&' + tokenname + '=' + tokenid;            
+    location.href = ref;
+}
