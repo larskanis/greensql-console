@@ -1,35 +1,58 @@
-<h3>{$Name}</h3>
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
-<tr>
 { if $NUM_Dbs == 1 or $def_pwd == 1 }
-<td width=50%><h4>Tips</h4>
+<div class="dashboard-block">
+<h4>Tips</h4>
 { if $NUM_Dbs == 1 }
-You can start by creating your first database <a href="db_add.php?{$TokenName}={$TokenID}">here</a>.
-<br/>
-You can alter default listener settings <a href="proxy_add.php?proxyid=1&{$TokenName}={$TokenID}">here</a>.
-<br/>
+<a href="db_add.php?type=newdb&{$TokenName}={$TokenID}">Create New DB</a><br/>
 { /if }
 { if $def_pwd == 1 }
-Please change default password <a href="user_edit.php?{$TokenName}={$TokenID}">here</a>.
-<br/>
+<a href="user_edit.php?user_id=1&{$TokenName}={$TokenID}">Change Default Root Password</a><br>
 { /if }
-</td>
+</div>
+<div class="dashboard-space">&nbsp;</div>
 { /if }
-<td width=50%>
+
+<div class="dashboard-block">
 <h4>Stats</h4>
-Number of new alerts: {$NUM_Alers}<br/>
-Number of databases : {$NUM_Dbs}<br/>
-</td></tr>
-</table>
-<h4>Alerts</h4>
+New Alerts: {$NUM_Alers}
+&nbsp;&nbsp;
+Databases : {$NUM_Dbs}
+</div>
+<div style="clear:both;"></div>
+<table width="100%">
+  <tr><td><h4>Latest Security Alerts</h4></td></tr>
+  <tr><td>
 {$alerts}
-{ if $NUM_Alers > 10 }
-<center><a href="{$more_alerts}">More</a></center>
-{ /if }
-<h4>News</h4>
+  </td></tr>
+
+{ if $NUM_Alers > 7 }
+  <tr><td><center><a href="{$more_alerts}">More</a></center></td></tr>
+{ /if }	
+</table>
+<div class="dashboard-block">
+<h4>GreenSQL Twitter</h4>
 <table cellspacing=0 cellpadding=0 width="100%" id="table_cont">
 <tr>
- <td width=150>Date & Time</td>
+ <td width=120>Date & Time</td>
+ <td>Description</td>
+</tr>
+{ if count($twitts) > 0 }
+{section name=info loop=$twitts}
+<tr bgcolor="#ffffe0">
+<td nowrap style="font-size:13px;">{$twitts[info].date}</td>
+<td style="overflow:hidden;" nowrap><a href='{$twitts[info].link}'>{$twitts[info].title}</a></td>
+</tr>
+{/section}
+{ else }
+<tr><td colspan="2">No twitts available.</td></tr>
+{ /if }
+</table>
+</div>
+<div class="dashboard-space">&nbsp;</div>
+<div class="dashboard-block">
+<h4>Project News</h4>
+<table cellspacing=0 cellpadding=0 width="100%" id="table_cont">
+<tr>
+ <td width=120>Date & Time</td>
  <td>Description</td>
 </tr>
 { if count($news) > 0 }
@@ -43,3 +66,4 @@ Number of databases : {$NUM_Dbs}<br/>
 <tr><td colspan="2">No news available.</td></tr>
 { /if }
 </table>
+</div>

@@ -1,8 +1,11 @@
-</td></tr></table>
-<br/>
-<center>
-<tt><div id=menu><a href="http://www.greensql.net/">GreenSQL Open Source Database Firewall</a></div></tt>
-<small>GreenSQL-Console ver. {$Version}</small>
+<div id="footer-wrapper">
+<div id="footer">
+<br/><br/><br/><br/>
+<center>	
+<tt><a href="http://www.greensql.net/">GreenSQL Open Source Database Firewall</a></tt>
 </center>
+</div>
+</div>
+
 </BODY>
 </HTML>

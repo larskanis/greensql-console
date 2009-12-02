@@ -1,40 +1,26 @@
-<HTML>
-<HEAD>
-<TITLE>GreenSQL: {$title}</TITLE>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<script type="text/javascript" src="code.js"></script>
-</HEAD>
+<html>
+<head>
+	<title>GreenSQL: {$title}</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script type="text/javascript" src="code.js"></script>
+	<link href="navbar.css" rel="stylesheet" type="text/css"/>
+</head>
+<body bgcolor="#FFFFFF" onLoad="init_help();">
 
-<BODY bgcolor="#ffffff" onLoad="init_help();">
-<table width="100%">
-<tr><td width="10%"><img src="images/greensql-logo.gif"></td>
-<td style="vertical-align:middle">
-<b><font color="#00dd00" size=4>GreenSQL</font></b><br>
-<tt>
-<div id="menu">
-<div style="display:inline; align:left; ">
-<a href="dashboard.php?{$TokenName}={$TokenID}">Dashboard</a> | 
-<a href="rawalert_list.php?{$TokenName}={$TokenID}">Alerts</a> | 
-<a href="proxy_add.php?{$TokenName}={$TokenID}">Listeners</a> | 
-<a href="log_view.php?{$TokenName}={$TokenID}">View Log</a> | 
-<a href="user_edit.php?{$TokenName}={$TokenID}">Settings</a> | 
-<a href="cleanall.php?{$TokenName}={$TokenID}">Clean All</a> | 
-<a target="_blank" href="http://www.greensql.net/forum">Support</a> |
-<a href="logout.php">Logout</a>
+<div id="page">
+<div id="header-wrapper">
+<div id="header">
+<div id="header-top">
+<img src="images/greensql-logo.gif" />
+<h2>GreenSQL Database Firewall</h2>
+<div style="float:right;padding-top:15px;"><a style="text-decoration:none;" href="http://support.greensql.com/"><img style="border:0;" src="images/buy-support.gif" /></a></div>
+</div><!-- /header-top -->
+<div id="total-menu">
+<div id="primary-menu">
+{$PrimaryMenu}
 </div>
-</tt>
-</td>
-</tr>
-</table>
-<hr>
-<table width="100%">
-<tr>
-<td width="10%" id="menu">
-<b>Databases:</b></br>
-{section name=sec1 loop=$databases}
-<a href="db_view.php?db_id={$databases[sec1].id}&{$TokenName}={$TokenID}">{$databases[sec1].name}</a><br/>
-{/section}
-<br/>
-<a href="db_add.php?{$TokenName}={$TokenID}">Add db</a>
-</td>
-<td>
+{$SecondaryMenu}
+</div>
+<div style="clear:both;"></div>
+</div>
+</div><!-- /header-wrapper -->

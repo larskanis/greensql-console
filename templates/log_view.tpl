@@ -1,11 +1,10 @@
 {if $HelpPage}
 {include file="$HelpPage"}
+<div style="clear:both"></div>
 {/if}
-<h3>View Application Logs</h3>
 {if $msg }
 <pre>{$msg}</pre>
 {/if }
-<br/>
-<div style="border:solid 1px;">
+<div style="border:solid 1px; text-align:left; height:70%; overflow:scroll;">
 {$Log}
 </div>

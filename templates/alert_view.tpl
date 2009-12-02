@@ -1,7 +1,16 @@
-{ $DB_Menu }
 {if $HelpPage}
 {include file="$HelpPage"}
 {/if}
+Change db: <select style="width:232px;height:21px;font-size:15px" onchange="location=this.options[this.selectedIndex].value">
+<option value="rawalert_list.php?db_id=0&{$TokenName}={$TokenID}">All Databases</option>
+{section name=sec1 loop=$databases}
+{if $DB_ID==$databases[sec1].id}
+  <option value="rawalert_list.php?db_id={$databases[sec1].id}&{$TokenName}={$TokenID}" selected="selected">{$databases[sec1].name}</option>
+{else}
+  <option value="rawalert_list.php?db_id={$databases[sec1].id}&{$TokenName}={$TokenID}">{$databases[sec1].name}</option>
+{/if}
+{/section}
+</select>{$DB_Menu}
 <h3>{$Name}</h3>
 {if $msg }
 <pre>{$msg}</pre>
@@ -19,7 +28,7 @@
 <input type="hidden" name="action" value="approve">
 <input type="hidden" name="{$TokenName}" value="{$TokenID}">
 <input type="submit" name="submit" value="Add to Whitelist">
-<input type="submit" name="submit" value="Ignore this query">
+<input type="submit" name="submit" value="Hide Pattern">
 </form>
 </td></tr>
 { elseif $AGROUP_status == 0 && $AGROUP_bad == 1 }
@@ -45,6 +54,13 @@ This query has bad format. You can only ignore it.<br/><br/>
 <tr><td>Risk:</td><td>{$alerts[sec2].risk} {$alerts[sec2].block_str}</td></tr>
 <tr><td>Reason:</td><td>{$alerts[sec2].reason}</td></tr>
 <tr><td>ID:</td><td>{$alerts[sec2].alertid}</td></tr>
-<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td colspan=2>
+<form method="POST">
+<input type="hidden" name="action" value="delete">
+<input type="hidden" name="alertid" value="{$alerts[sec2].alertid}">
+<input type="hidden" name="{$TokenName}" value="{$TokenID}">
+<input type="submit" name="submit" value="Remove Alert">
+</form><br/>
+</td></tr>
 {/section}
 </table>  

@@ -1,5 +1,10 @@
 {include file="header.tpl" title=$Name}
 
+<div id="content-wrapper">
+<div id="content">
 {include file="$Page"}
-<p>
+</div><!-- /content-wrapper -->
+</div><!-- /content -->
+</div><!-- /page -->
+
 {include file="footer.tpl"}
