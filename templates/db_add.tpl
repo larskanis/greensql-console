@@ -9,8 +9,6 @@
 <a href="javascript:show_help();void(0);">help</a>
 </div>
 <input type="hidden" name="{$TokenName}" value="{$TokenID}">
-<div class="dashboard-space">&nbsp;</div>
-
 <div class="dashboard-block">
 <form action='db_add.php?{$TokenName}={$TokenID}' method="POST">
 <P>&nbsp;</P>
