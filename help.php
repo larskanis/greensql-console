@@ -8,7 +8,7 @@ function get_section_help($section)
   $help = '';
   if ($section == "proxy_add")
   {
-    $help ='<h3>What is a GreenSQL Proxy?</h3><br/>GreenSQL proxy object is the heart of the GreenSQL Databae Firewall. A proxy is an object used to connect queries from the frontend to a specific backend server. Before passing the query to the backend it will be processed by GreenSQL to determine if it is malicious and if so how it should be handled (block, alert, pass).</br><img src="images/listener.gif"><br/>';
+    $help ='<h3>What is a GreenSQL Proxy?</h3><br/>GreenSQL proxy object is the heart of the GreenSQL Database Firewall. A proxy is an object used to connect queries from the frontend to a specific backend server. Before passing the query to the backend, it will be processed by GreenSQL to determine if it is malicious and if so how it should be handled (block, alert, pass).</br><img src="images/listener.gif"><br/>';
   } else if ($section == "log_view")
   {
     global $num_log_lines;
@@ -26,7 +26,7 @@ function get_section_help($section)
     $help = "<h3>What is a database?</h3>Database names coincide to the names of databases on the backend SQL server. A database should be coupled with a GreenSQL  <a href='proxy_add.php?$tokenname=$tokenid'>Proxy object</a>.<br/>A number of databases can use the same GreenSQL Proxy. You can edit the permissions for each database to block actions such as changes to DB structure, execution of sensitive commands.";
   } else if ($section == "rawalert_list")
   {
-    $help = '<h3>Alerts Help</h3>The Alerts options allows you to view all suspicious SQL queries been detected by GreenSQL, by default the Alert option shows the Alerts from all protected Databases, you have the option to customize the view to a specific database by selecting a specific database.';
+    $help = '<h3>Alerts Help</h3>The Alerts option allows you to view all suspicious SQL queries that have been detected by GreenSQL. By default the Alert option shows the Alerts from all protected databases. You have the option to customize the view to a specific database by selecting it.';
   } else if ($section == "user_edit")
   {
     $help = '<br/><h3>Setings Page Help</h3>The edit user option allows you to edit a GreenSQL administrator parameters, such as user name,  e-mail address and password.';
@@ -40,11 +40,11 @@ function get_section_help($section)
   }
     else if($section == "user_list")
   {
-    $help = '<h3>Users Help</h3>The Users option allows creating or removing administrators and changing administrators password of the GreenSQL administrators, This page shows the administrators list and enables you to alter users setting like name, email and password.';
+    $help = '<h3>User Help</h3>The Users option allows you to create and remove administrators and to change password of the GreenSQL administrators. This page shows the administrator list and allows you to alter user setting such as name, email and password.';
   }
     else if($section == "backuprestore")
   {
-    $help = '<h3>Users Help</h3>The Backup & Restore options allow you to back up and restore your GreenSQL configuration to your PC. The generated configuration file is in the XML format, and you can edit it after you Backup and save it to your PC, and restore it with the new configuration, Passwords are encrypted in the XML file.</h3>';
+    $help = '<h3>Users Help</h3>The Backup & Restore options allow you to back up and restore your GreenSQL configuration to your PC. The generated configuration file is in XML format, and you can edit it after you Backup and save it to your PC, and restore it with the new configuration. Passwords are encrypted in the XML file.</h3>';
   }
     else if ($section == "db_view")
   {
