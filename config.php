@@ -36,6 +36,6 @@ $limit_per_page = 10;
 $cache_dir = "templates_c";
 
 # Smarty directory location (optional)
-#$smarty_dir = "/usr/share/php/smarty";
+$smarty_dir = "/usr/share/php/smarty";
 
 ?>
