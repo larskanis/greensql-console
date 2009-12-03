@@ -4,7 +4,7 @@
 #$demo_version = 1;
 
 # greensql version
-$version = "1.2.0";
+$version = "0.6.2";
 
 # Database Type
 $db_type = "mysql";
@@ -36,6 +36,6 @@ $limit_per_page = 10;
 $cache_dir = "templates_c";
 
 # Smarty directory location (optional)
-$smarty_dir = "/usr/share/php/smarty";
+#$smarty_dir = "/usr/share/php/smarty";
 
 ?>
