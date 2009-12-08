@@ -1,6 +1,9 @@
 <?php
 require_once 'lib.php';
 
+global $demo_version;
+global $smarty;
+
 $msg = "";
 $error = "";
 
@@ -15,9 +18,9 @@ $db  = get_database($db_id);
 #    isset($_REQUEST['confirm']) && $_REQUEST['confirm'] == 'on' && $db)
 if (isset($_POST['delete']))
 {
-    if ($db_id == 0)
+    if ($db['sysdbtype'] != 'user_db')
     {
-        $error = "Default db can not be deleted.";
+        $error = "Default databases can not be deleted.";
     } else {
         $error = delete_database($db_id);
     }
