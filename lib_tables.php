@@ -11,8 +11,7 @@ function display_table($header, $rows)
   $sort_order = "asc";
   $sorted = get_sort_order($header, $sort_field, $sort_order);
 
-  $out = '<table cellspacing=0 cellpadding=0 width="100%" id="table_cont"';
-
+  $out = '<table cellspacing=0 cellpadding=0 width="100%" id="table_cont">';
   $out .= "\n<tr>";
   foreach ($header as $row)
   {
