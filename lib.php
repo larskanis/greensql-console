@@ -126,7 +126,7 @@ function validate_installation()
     global $db_type;
     $msg = '';
     $bad = 0;
-    
+
     $msg .= "<h2>GreenSQL configuration error</h2>";
     $msg .= "<h3>1. Cache Directory</h3>\n";
     if ($cache_dir && !is_writable($cache_dir)) {
@@ -153,7 +153,7 @@ function validate_installation()
     } else {
         $msg .= "Connection to <font color='green'>$db_name</font> established.<br/>\n";
     }
-     
+
     # check database structure
     if (!$db_error)
     {
@@ -501,7 +501,7 @@ function update_database($db)
          "status=".$db['status'].", ".
          "status_changed=now() ".
          "WHERE dbpid=".$db['dbpid'];
-    $result = db_query($q); 
+    $result = db_query($q);
 }
 
 function delete_database($db_id)
@@ -1153,10 +1153,11 @@ function get_twitts()
 
 function exec_php_file($app)
 {
-	print "getting news\n";
+  print "getting news\n";
   global $cache_dir;
   if (function_exists('pcntl_fork'))
   {
+    #print "forking";
     $pid = pcntl_fork();
     if ($pid == 0)
     {

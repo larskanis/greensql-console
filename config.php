@@ -4,16 +4,16 @@
 #$demo_version = 1;
 
 # greensql version
-$version = "0.6.2";
+$version = "1.2.0";
 
-# Database Type
+# Database Type, allowed values "mysql" and "pgsql"
 $db_type = "mysql";
 
 # Database IP address
 $db_host = "127.0.0.1";
 
 # Database Port Value.
-#$db_port = 3306;
+$db_port = 3306;
 
 # database name used to store greensql confiuration and alerts
 $db_name = "greendb";
