@@ -1,29 +1,31 @@
 <?php
-unset($cache_dir);
-include_once 'config.php';
+
+include_once './config.php';
 global $cache_dir;
+
+if (!isset($cache_dir) || strlen($cache_dir) == 0)
+{
+  include_once getcwd() . DIRECTORY_SEPARATOR .'config.php';
+  global $cache_dir;
+}
 
 $news_url = "http://www.greensql.net/community-news-feed";
 $twitts_url = "http://twitter.com/statuses/user_timeline/18915816.rss";
 
 $twitts_data = get_page($twitts_url);
-
-if (!$twitts_data)
-{
- exit;
-}
-
 $news_data = get_page($news_url);
-if (!$news_data)
+if (!$twitts_data && !$news_data)
 {
  exit;
 }
+#print "parsing $cache_dir\n";
 
 $news = parse_data($news_data);
 $twitts = parse_data($twitts_data);
 $twitts = preg_replace('/greensql\:/','',$twitts);
 
 $file = $cache_dir . DIRECTORY_SEPARATOR . "news.txt";
+#print "writing $file\n";
 $fp = @fopen($file, "w");
 if (!$fp)
 {
