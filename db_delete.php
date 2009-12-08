@@ -20,16 +20,15 @@ if (isset($_POST['delete']))
 {
     if ($db['sysdbtype'] != 'user_db')
     {
-        $error = "Default databases can not be deleted.";
+        $error .= "Default database can not be deleted.<br/>\n";
     } else {
         $error = delete_database($db_id);
     }
+
     if (!$error)
     {
         $msg = "Database has been successfully deleted.<br/>You need to restart greensql firewall for the changes take effect.";
-    }
-    if ($error)
-    {
+    } else {
         $msg = "<font color='red'>$error</font>";
     }
     $_SESSION['msg'] = $msg;
