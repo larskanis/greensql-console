@@ -18,7 +18,7 @@ $db  = get_database($db_id);
 #    isset($_REQUEST['confirm']) && $_REQUEST['confirm'] == 'on' && $db)
 if (isset($_POST['delete']))
 {
-    if ($db['sysdbtype'] != 'user_db')
+    if ($db['sysdbtype'] != 'user_db' || $demo_version)
     {
         $error .= "Default database can not be deleted.<br/>\n";
     } else {
