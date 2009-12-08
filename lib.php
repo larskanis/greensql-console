@@ -1153,10 +1153,10 @@ function get_twitts()
 
 function exec_php_file($app)
 {
-  print "getting news\n";
+	print "getting news\n";
+  global $cache_dir;
   if (function_exists('pcntl_fork'))
   {
-    #print "forking";
     $pid = pcntl_fork();
     if ($pid == 0)
     {
@@ -1170,7 +1170,7 @@ function exec_php_file($app)
   {
     if (file_exists("/usr/bin/php"))
     {
-      if (exec("/usr/bin/php $app >/dev/null &") !== FALSE)
+      if (exec("/usr/bin/php $app >/dev/null &") !== FALSE && is_file($cache_dir.DIRECTORY_SEPARATOR.'news.txt'))
       {
         return;
       }

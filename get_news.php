@@ -1,7 +1,12 @@
 <?php
 
-include_once './config.php';
 global $cache_dir;
+
+if (!isset($cache_dir) || strlen($cache_dir) == 0)
+{
+  include_once './config.php';
+  global $cache_dir;
+}
 
 if (!isset($cache_dir) || strlen($cache_dir) == 0)
 {
