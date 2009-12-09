@@ -45,7 +45,7 @@ $header[] = array('field' => 'proxyname', 'title' => 'Proxy', 'size' => 150);
 $header[] = array('field' => 'db_name', 'title' => 'Database', 'size' => 75);
 $header[] = array('field' => 'query', 'title' => 'Pattern', 'size' => 'auto');
 
-$whitelist = get_whitelist($header, $db['proxyid'], $db_id, $db['db_name'], 
+$whitelist = get_whitelist($header, $db['proxyid'], $db['sysdbtype'], $db_id, $db['db_name'], 
                            $start_id*$limit_per_page, $limit_per_page);
 for ($i = 0; $i < count($whitelist); $i++)
 {
@@ -54,7 +54,7 @@ for ($i = 0; $i < count($whitelist); $i++)
 }
 $smarty->assign("whitelist", display_table($header, $whitelist));
 
-$numResults = get_whitelist_size($db['proxyid'], $db_id, $db['db_name']);
+$numResults = get_whitelist_size($db['proxyid'], $db['sysdbtype'], $db_id, $db['db_name']);
 $smarty->assign("pager", get_pager($numResults));
 $smarty->assign("db_id",$db_id);
 $smarty->assign("proxy_id",$db['proxyid']);

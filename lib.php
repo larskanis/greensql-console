@@ -397,7 +397,6 @@ function restore_table_data($xml,$table_name,$key)
     return $error;
 }
 
-
 function get_table_data($xml_doc,$xml,$table_name)
 {
     $table_name = db_escape_string($table_name);
@@ -626,15 +625,26 @@ function get_alerts($header, $status, $proxyid, $db_id, $db_name, $from, $count 
     return $alerts;
 }
 
-function get_whitelist($header, $proxyid, $db_id, $db_name, $from, $count )
+function get_whitelist($header, $proxyid, $sysdbtype, $db_id, $db_name, $from, $count )
 {
     $q = "SELECT queryid, proxy.proxyname, query, db_name FROM query, proxy ".
          "WHERE query.proxyid = proxy.proxyid ";
-    if ($proxyid)
+    if ($proxyid && $sysdbtype == "user_db")
+	{
       $q .= "AND query.proxyid = $proxyid AND query.db_name='$db_name' ";
+	}
     # check if default db
-    else if ($db_id == 1)
-      $q .= "AND query.db_name='' ";
+	else if ($sysdbtype == "default_mysql")
+	{
+	  $q .= "AND query.proxyid = proxy.proxyid AND proxy.dbtype = 'mysql' AND query.db_name!='' ";
+    } else if ($sysdbtype == "empty_mysql")
+	{
+	  $q .= "AND query.proxyid = proxy.proxyid AND proxy.dbtype = 'mysql' AND query.db_name='' ";
+	} else if ($sysdbtype == "default_pgsql")
+	{
+	  $q .= "AND query.proxyid = proxy.proxyid AND proxy.dbtype = 'pgsql' ";
+	}
+
     $q = add_query_sort($header, $q);
     $q = add_query_limit($q, $from, $count );
     #print "q: $q<br/>";
@@ -655,15 +665,25 @@ function get_whitelist($header, $proxyid, $db_id, $db_name, $from, $count )
     return $rows;
 }
 
-function get_whitelist_size($proxyid, $db_id, $db_name)
+function get_whitelist_size($proxyid, $sysdbtype, $db_id, $db_name)
 {
-    $q = "SELECT count(*) FROM query, proxy ".
+    $q = "SELECT count(queryid) FROM query, proxy ".
          "WHERE query.proxyid = proxy.proxyid ";
-    if ($proxyid)
+    if ($proxyid && $sysdbtype == "user_db")
+	{
       $q .= "AND query.proxyid = $proxyid AND query.db_name='$db_name' ";
+	}
     # check if default db
-    else if ($db_id == 1)
-      $q .= "AND query.db_name='' ";
+	else if ($sysdbtype == "default_mysql")
+	{
+	  $q .= "AND query.proxyid = proxy.proxyid AND proxy.dbtype = 'mysql' AND query.db_name!='' ";
+    } else if ($sysdbtype == "empty_mysql")
+	{
+	  $q .= "AND query.proxyid = proxy.proxyid AND proxy.dbtype = 'mysql' AND query.db_name='' ";
+	} else if ($sysdbtype == "default_pgsql")
+	{
+	  $q .= "AND query.proxyid = proxy.proxyid AND proxy.dbtype = 'pgsql' ";
+	}
 
     $result = db_query($q);
     $row = db_fetch_array($result);
@@ -788,12 +808,12 @@ function get_raw_alerts_with_limit($agroupid, $limit)
     {
         $row['reason'] = str_replace("\n", "<br/>\n", $row['reason']);
 
-    if ($row['block'] == 1)
-    {
-        $row['block_str'] = "<font color='red'>blocked</font>";
-    } else if ($row['block'] == 0)
-    {
-        $row['block_str'] = "<font color='orange'>warning</font>";
+        if ($row['block'] == 1)
+        {
+            $row['block_str'] = "<font color='red'>blocked</font>";
+        } else if ($row['block'] == 0)
+        {
+            $row['block_str'] = "<font color='orange'>warning</font>";
         } else if ($row['block'] == 2)
         {
             $row['block_str'] = "<font color='red'>high risk</font>";
@@ -952,7 +972,7 @@ function get_raw_alerts($header, $status, $sysdbtype = 'user_db', $proxyid = 0, 
             $row['color'] = "#f9f9f9"; # a light grey
         } else {
             $row['block'] = "unknown";
-        $row['color'] = "#f9f9f9"; # a light grey
+            $row['color'] = "#f9f9f9"; # a light grey
         }
 
         // if (strlen($row['description']) > 120)
@@ -999,7 +1019,7 @@ function approve_alert($agroupid, $alert)
          "values (".$alert['proxyid'].",".
          "'".db_escape_string($alert['db_name'])."')"; 
          #print $q;
-       $result = db_query($q);
+        $result = db_query($q);
     }
 
     # decode html tags
@@ -1226,15 +1246,18 @@ function get_primary_menu()
 
   $script = ereg_replace(".*/", "", $_SERVER['SCRIPT_NAME']);
   $msg = '<ul class="menu">';
+
   if ($script == "dashboard.php")
     $msg .= '<li class="active"><a href="dashboard.php?'.$tokenname.'='.$tokenid.'">Dashboard</a></li>';
   else
     $msg .= '<li><a href="dashboard.php?'.$tokenname.'='.$tokenid.'">Dashboard</a></li>';
+
   if (substr($script, 0,2) == "db" || substr($script, 0,5) == "proxy" || 
       substr($script,0, strlen('whitelist')) == "whitelist" || $script =="alert_view.php")
     $msg .= '<li class="active"><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';
   else
     $msg .= '<li><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';
+
   if ($script == "rawalert_list.php")
     $msg .= '<li class="active"><a href="rawalert_list.php?'.$tokenname.'='.$tokenid.'">Alerts</a></li>';
   else
@@ -1286,15 +1309,18 @@ function get_top_db_menu()
 
   $script = ereg_replace(".*/", "", $_SERVER['SCRIPT_NAME']);
   $msg = '<div id="secondary-menu"><ul class="menu">';
+
   if ((substr($script, 0,2) == "db" && $script != "db_add.php") || $script == "rawalert_list.php" || $script == "proxy_edit.php" ||
       substr($script,0, strlen('whitelist')) == "whitelist" || $script == "alert_view.php")
     $msg .= '<li class="active"><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';
   else
     $msg .= '<li><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';
+	
   if ($script == "db_add.php")
     $msg .= '<li class="active"><a href="db_add.php?type=newdb&'.$tokenname.'='.$tokenid.'">Add Database</a></li>';
   else
     $msg .= '<li><a href="db_add.php?type=newdb&'.$tokenname.'='.$tokenid.'">Add Database</a></li>';
+
   if ($script == "proxy_add.php")
     $msg .= '<li class="active"><a href="proxy_add.php?'.$tokenname.'='.$tokenid.'">Add Proxy</a></li>';
   else
@@ -1310,6 +1336,7 @@ function get_local_db_menu($db_name = "", $db_id = 0)
   global $tokenid;
   $msg = "&nbsp;More for $db_name: ";
   $script = ereg_replace(".*/", "", $_SERVER['SCRIPT_NAME']);
+
   if ($script == "db_view.php")
   {
     $msg .= "<strong>Overview</strong> | ";
@@ -1317,13 +1344,15 @@ function get_local_db_menu($db_name = "", $db_id = 0)
   } else {
     $msg .= "<a href='db_view.php?db_id=$db_id&$tokenname=$tokenid'>Overview</a> | ";
   }
+
   if ($script == "rawalert_list.php")
   {
     $msg .= "<strong>Alerts</strong> | ";
   } else {
     $msg .= "<a href='rawalert_list.php?db_id=$db_id&$tokenname=$tokenid'>Alerts</a> | ";
   }
-  if ($script == "whitelist.php")
+
+  if ($script == "whitelist.php") // || $script == "whitelist_entry_view.php")
   {
     $msg .= "<strong>Whitelist</strong> | ";
   } else {
