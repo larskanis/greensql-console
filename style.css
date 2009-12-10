@@ -11,12 +11,12 @@ text-align:center;
 
 #page 
 {
-width: 100%;
-min-width: 100%;
+font-size: 12px;
 min-height: 100%;
 height: auto !important;
 height: 100%;
-margin: 0 auto -4em;
+margin: 0 auto -4.3em;
+width: 100%;
 }
 
 #header-wrapper 
