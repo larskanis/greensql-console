@@ -7,7 +7,9 @@ if (substr(phpversion(),0,1) == "5" && function_exists('date_default_timezone_se
 {
   #set default time zone - this prevents PHP5 from 
   #showing strange warning messages
-  date_default_timezone_set("America/Los_Angeles");
+  if (! date_default_timezone_get()) {
+    date_default_timezone_set("America/Los_Angeles"); 
+  }
 }
 
 # do not start session if it was started in login.php file
