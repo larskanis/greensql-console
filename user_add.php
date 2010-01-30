@@ -29,7 +29,7 @@ if (isset($_POST['submit']))
 	{
 		$error .= "Email can not be empty.<br/>\n";
 	} 
-	else if (!ereg("^[a-zA-Z0-9_i\@\.]+$", $user['email']))
+	else if (!ereg("^[a-zA-Z0-9_\-\@\.]+$", $user['email']))
 			{
 				$error .= "Email address is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', '.' and '@'.<br/>\n";
 			}
