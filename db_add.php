@@ -41,7 +41,11 @@ if ($proxy_id && $db_name)
 {
     if (!ereg("^[a-zA-Z0-9_\ -]+$",$db_name))
     {
-        $error = "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.";
+        $error .= "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
+    }
+    if (strlen($db_name) > 100)
+    {
+        $error .= "Database name is too long.<br/>\n";
     }
     if ($demo_version)
     {
@@ -138,8 +142,8 @@ else
     $proxy["backend_ip"] = "";
     $proxy["backend_port"] = "";
 
-     $dbtypes = '<option value="mysql">MySQL</option>
-	         <option value="pgsql">PostgreSQL</option>';
+     $dbtypes = '<option value="mysql">MySQL</option>'.
+	         '<option value="pgsql">PostgreSQL</option>';
 
 }
 $smarty->assign("DBTypes",$dbtypes);

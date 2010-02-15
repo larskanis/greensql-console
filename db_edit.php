@@ -82,7 +82,7 @@ if (isset($_POST['submit']))
         $error .= "Block Status value is invalid.<br/>\n";
     }
 
-    if (strlen($db['db_name']) > 20)
+    if (strlen($db['db_name']) > 100)
     {
         $error .= "Database name is too long.<br/>\n";
     }
