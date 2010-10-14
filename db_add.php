@@ -59,7 +59,7 @@ if ($proxy_id && $db_name)
     {
         $msg = "<font color='red'>$error</font>";
     } else {
-        $msg = "Object has been created successfully.";
+        $msg = "Database has been created successfully.";
         $_SESSION['msg'] = $msg;
         header("location: db_list.php?$tokenname=$tokenid");
         exit;

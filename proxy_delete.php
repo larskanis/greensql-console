@@ -7,6 +7,9 @@ global $smarty;
 $msg = "";
 $error = "";
 
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_db_menu());
+
 $proxyid = 0;
 if (isset($_REQUEST['proxyid']))
 {
@@ -28,10 +31,8 @@ if (isset($_POST['delete']))
         $error = delete_proxy($proxyid);
     }
 
-    if (!$error)
+    if ($error)
     {
-        $msg = "Proxy has been successfully deleted.<br/>You need to restart greensql firewall for the changes take effect.";
-    } else {
         $msg = "<font color='red'>$error</font>";
     }
     $_SESSION['msg'] = $msg;

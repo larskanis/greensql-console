@@ -12,10 +12,10 @@ text-align:center;
 #page 
 {
 font-size: 12px;
-min-height: 100%;
+min-height: 96%;
 height: auto !important;
-height: 100%;
-margin: 0 auto -4.3em;
+height: 96%;
+margin: 0 auto;
 width: 100%;
 }
 
@@ -54,7 +54,10 @@ padding-top:20px;
 #footer-wrapper 
 {
 width: 100%;
-height: 4em;
+height: 30px;
+min-height:30px;
+display:block;
+margin: 0 auto;
 }
 
 #footer 
@@ -142,6 +145,7 @@ vertical-align: top;
 table-layout:fixed;
 font-size: 9pt;
 border: solid 1px black;
+margin-top: 10px;
 }
 
 #table_cont tr td A:link {
@@ -170,7 +174,7 @@ color: #000000;/*#9BF507;*/
 line-height:22px;
 }
 
-#table_cont th
+.headline, #table_cont th
 {
 border-width:1px;
 padding: 1px;
@@ -184,7 +188,7 @@ text-align: left;
 color: #ffffff;/*#9BF507;*/
 }
 
-#table_cont th {
+.headline, #table_cont th {
 font-weight:normal;
 font-size: 13px;
 background: #5B9004;

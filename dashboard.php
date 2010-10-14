@@ -33,7 +33,7 @@ $header[] = array('field' => 'event_time', 'title' => 'Date & Time', 'size'=> 17
 $header[] = array('field' => 'proxyname', 'title' => 'Proxy', 'size' => 150);
 $header[] = array('field' => 'db_name', 'title' => 'Database', 'size' => 100);
 #$header[] = array('field' => 'user', 'title' => 'User', 'size' => 100);
-$header[] = array('title' => 'Description', 'size' => 'auto');
+$header[] = array('field' => 'pattern', 'title' => 'Pattern', 'size' => 'auto');
 $header[] = array('field' => 'block', 'title' => 'Status', 'size' => 55);
 
 $alerts = get_raw_alerts($header, $status);

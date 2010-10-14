@@ -255,7 +255,7 @@ function get_proxy_list()
         switch($row['status'])
 	{
 	 case 0:
-            $row['Status'] = "Starting Up";
+            $row['Status'] = "Inactive";
 	    break;
          case 1:
             $row['Status'] = '<font color="green">Active</font>';
@@ -701,15 +701,21 @@ function get_whitelist_entry($queryid)
     //     "FROM query, proxy ".
     //     "WHERE query.proxyid = proxy.proxyid AND query.queryid = $queryid";
 
-    $q = "SELECT query.*, proxy.proxyname, db_perm.dbpid as db_id ". 
+    $q = "SELECT query.*, proxy.proxyname, proxy.dbtype, db_perm.dbpid as db_id, db_perm.sysdbtype ". 
          "FROM query, proxy, db_perm ".
-         "WHERE query.proxyid = proxy.proxyid AND query.queryid = $queryid ".
-         "AND ((query.db_name = db_perm.db_name AND proxy.proxyid = db_perm.proxyid ) OR ".
-               "(query.db_name = '' AND db_perm.dbpid = 1))";
+         "WHERE query.proxyid = proxy.proxyid AND query.proxyid=db_perm.proxyid AND proxy.proxyid = db_perm.proxyid ".
+         "AND query.db_name = db_perm.db_name AND query.queryid = $queryid";
     $result = db_query($q);
-
-    $row = array();
     $row = db_fetch_array($result);
+
+    if (! $row) {
+      $q = "SELECT query.*, proxy.proxyname, proxy.dbtype, db_perm.dbpid as db_id, db_perm.sysdbtype FROM query, db_perm, proxy " .
+           "WHERE query.proxyid = proxy.proxyid AND query.queryid = $queryid AND ((query.db_name = '' AND proxy.dbtype = 'mysql' ".
+           "AND db_perm.sysdbtype = 'empty_mysql') OR (query.db_name != '' AND proxy.dbtype = 'mysql' AND db_perm.sysdbtype = 'default_mysql') ".
+           "OR (proxy.dbtype ='pgsql' AND db_perm.sysdbtype='default_pgsql'))";
+      $result = db_query($q);
+      $row = db_fetch_array($result);
+    }
 
     if (!$row)
         return $row;
@@ -719,6 +725,8 @@ function get_whitelist_entry($queryid)
 
 function del_whitelist_entry($entry)
 {
+  if (! $entry) { return; }
+
   $q = 'SELECT agroupid from alert_group WHERE proxyid='.
        $entry['proxyid']." AND db_name='".$entry['db_name']."' ".
        "AND pattern='".$entry['query']."'";
@@ -727,7 +735,6 @@ function del_whitelist_entry($entry)
   if ($row)
   {
     $agroupid = $row[0];
-    //ignore_alert($agroupid);
     delete_alert($agroupid);
   }
   $q = 'DELETE from query WHERE queryid='.$entry['queryid'];
@@ -762,31 +769,34 @@ function get_num_alerts( $status, $proxyid, $db_id, $db_name)
 }
 
 
-function get_alert($agroupid)
+function get_alert($agroupid,$alertid = 0)
 {
     $agroupid=intval($agroupid);
-    $q = "SELECT alert_group.*,proxy.proxyname, db_perm.dbpid as db_id ".
-         "FROM alert_group, proxy, db_perm ".
-         "WHERE alert_group.proxyid=proxy.proxyid AND agroupid = $agroupid ".
-         "AND alert_group.db_name = db_perm.db_name AND proxy.proxyid = db_perm.proxyid ".
-         "ORDER BY update_time DESC";
-    $result = db_query($q);
 
-    $row = array();
+    // it looks in both queries and then combines them to one if two exist
+    $q = "SELECT alert_group.*,proxy.proxyname, db_perm.dbpid as db_id FROM alert_group, proxy, db_perm 
+         WHERE alert_group.proxyid=proxy.proxyid AND alert_group.db_name = db_perm.db_name AND proxy.proxyid = db_perm.proxyid 
+         and alert_group.status=0 AND agroupid = $agroupid";
+    $result = db_query($q);
     $row = db_fetch_array($result);
-    
-    if (!$row)
-    {
-      $q = "SELECT alert_group.*,proxy.proxyname, db_perm.dbpid as db_id ".
-         "FROM alert_group, proxy, db_perm ".
-         "WHERE alert_group.proxyid=proxy.proxyid AND agroupid = $agroupid ".
-         "AND db_perm.dbpid = 1 ".
-         "ORDER BY update_time DESC";
+
+    if (! $row) {
+      $q = "SELECT alert_group.*,proxy.proxyname,db_perm.dbpid as db_id FROM alert_group, proxy, db_perm ".
+          "WHERE alert_group.proxyid=proxy.proxyid and agroupid = $agroupid and alert_group.status=0 ".
+          "AND ((alert_group.db_name = '' AND proxy.dbtype = 'mysql' AND db_perm.sysdbtype = 'empty_mysql') ".
+          "OR (alert_group.db_name != '' AND proxy.dbtype = 'mysql' AND db_perm.sysdbtype = 'default_mysql') ". 
+          "OR (proxy.dbtype ='pgsql' AND db_perm.sysdbtype='default_pgsql'))";
       $result = db_query($q);
       $row = db_fetch_array($result);
+   }
+
+    if (!$row) return;
+
+    if ($alertid) {
+      // done it like this so the original function doesnt change
+      $row = array_merge($row,get_raw_alert_byid($alertid));
     }
-    if (!$row)
-        return $row;
+
     if (strlen($row['pattern']) > 85)
     {
         $row['short_pattern'] = htmlspecialchars(substr($row['pattern'], 0, 80)."...");
@@ -797,9 +807,37 @@ function get_alert($agroupid)
     return $row;
 }
 
+function get_raw_alert_byid($alertid)
+{
+  $alertid=intval($alertid);
+  $q = "SELECT * FROM alert where alertid=$alertid";
+  $result = db_query($q);
+  $row = db_fetch_array($result);
+
+  if ($row['block'] == 1)
+  {
+    $row['block_str'] = "<font color='red'>blocked</font>";
+  } else if ($row['block'] == 0)
+  {
+    $row['block_str'] = "<font color='orange'>warning</font>";
+  } else if ($row['block'] == 2)
+  {
+    $row['block_str'] = "<font color='red'>high risk</font>";
+  } else if ($row['block'] == 3)
+  {
+    $row['block_str'] = "<font color='black'>low</font>";
+  } else if ($row['block'] == 4)
+  {
+    $row['block_str'] = "error";
+  }
+
+  return $row;
+}
+
 function get_raw_alerts_with_limit($agroupid, $limit)
 {
     $agroupid=intval($agroupid);
+
     $q = "SELECT * FROM alert WHERE agroupid=$agroupid ".
          "ORDER BY event_time DESC LIMIT $limit";
     $result = db_query($q);
@@ -892,32 +930,32 @@ function get_raw_alerts($header, $status, $sysdbtype = 'user_db', $proxyid = 0, 
     if ($db_id == 0)
     {
       // no database selected
-      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status ".
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status, alert_group.pattern ".
            "FROM alert, alert_group, proxy ".
            "WHERE alert.agroupid = alert_group.agroupid AND alert_group.proxyid=proxy.proxyid";
     } else if ($sysdbtype == 'user_db') {
       // non default db selected
-      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status ".
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status, alert_group.pattern  ".
            "FROM alert, alert_group, proxy ".
            "WHERE alert.agroupid = alert_group.agroupid ".
            "AND alert_group.proxyid=proxy.proxyid AND alert_group.db_name='$db_name'";
     } else if ($sysdbtype == 'empty_mysql') {
       // all mysql alerts on an empty mysql database
-      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name ".
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.pattern ".
            "FROM alert, alert_group, proxy ".
            "WHERE alert.agroupid = alert_group.agroupid ".
            "AND alert_group.proxyid=proxy.proxyid AND alert_group.db_name='' ".
            "AND proxy.dbtype='mysql'";
     } else if ($sysdbtype == 'default_mysql') {
       // all mysql alerts on databases that were not priorly defined
-      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status ".
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status, alert_group.pattern ".
            "FROM alert INNER JOIN alert_group ON (alert.agroupid = alert_group.agroupid) ".
            "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid) ".
            "LEFT JOIN db_perm ON (alert_group.db_name=db_perm.db_name) ".
            "WHERE db_perm.db_name IS NULL AND alert_group.db_name!='' ".
            "AND proxy.dbtype='mysql'";
     } else if ($sysdbtype == 'default_pgsql') {
-      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status ".
+      $q = "SELECT alert.*, proxy.proxyname, alert_group.db_name, alert_group.status, alert_group.pattern ".
            "FROM alert INNER JOIN alert_group ON (alert.agroupid = alert_group.agroupid) ".
            "INNER JOIN proxy ON (alert_group.proxyid=proxy.proxyid) ".
            "LEFT JOIN db_perm ON (alert_group.db_name=db_perm.db_name) ".
@@ -947,6 +985,10 @@ function get_raw_alerts($header, $status, $sysdbtype = 'user_db', $proxyid = 0, 
         $row['Description'] = preg_replace("/\.;/",";",$row['Description']);
         $row['Description'] = '<a href="alert_view.php?agroupid='.$row['agroupid'].
                               '&'.$tokenname.'='.$tokenid.'">'.$row['Description'].'</a>';
+
+        $row['pattern'] = '<a href="alert_view.php?agroupid='.$row['agroupid'] . '&alertid=' . $row['alertid']
+                        . '&'.$tokenname.'='.$tokenid.'">'.$row['pattern'].'</a>';
+
         if ($row['status'])
         {
           $row['Description'] = '<font color="gray" size="1.2">hidden: </font>' . $row['Description'];
@@ -997,9 +1039,30 @@ function get_raw_alerts($header, $status, $sysdbtype = 'user_db', $proxyid = 0, 
     return $alerts;
 }
 
-function approve_alert($agroupid, $alert)
+function disapprove_alert($entry)
+{
+    if (! $entry) { return; }
+
+    $q = 'DELETE from query WHERE queryid='.$entry['queryid'];
+    $result = db_query($q);
+
+    $q = 'SELECT agroupid from alert_group WHERE proxyid='.
+       $entry['proxyid']." AND db_name='".$entry['db_name']."' ".
+       "AND pattern='".$entry['query']."'";
+    $result = db_query($q);
+    if ($row = db_fetch_array($result)) {
+      $agroupid = intval($row['agroupid']);
+      $q = "UPDATE alert_group set status=0 WHERE agroupid=$agroupid";
+      $result = db_query($q);
+      return $result;
+    }
+}
+
+function approve_alert($agroupid, $alertid)
 {
     $agroupid=intval($agroupid);
+    $alert = get_alert($agroupid,$alertid);
+
     # first we will check we we have this database created
     $q = "";
     if ($alert['db_name'] == "")
@@ -1032,8 +1095,13 @@ function approve_alert($agroupid, $alert)
          "VALUES(".$alert['proxyid'].",1,'".$alert['db_name']."','".$pattern."')";
     $result = db_query($q);
 
-    $q = "UPDATE alert_group set status=1 WHERE agroupid=$agroupid";
-    $result = db_query($q);
+    if ($result) {
+      $q = "UPDATE alert_group set status=1 WHERE agroupid=$agroupid";
+      $result = db_query($q);
+      return $result;
+    }
+
+    return 0;
 }
 
 function ignore_alert($agroupid)
@@ -1056,6 +1124,7 @@ function delete_raw_alert($agroupid, $alertid)
 {
     $q = "DELETE from alert WHERE agroupid=$agroupid AND alertid=$alertid";
     $result = db_query($q);
+    return $result;
 }
 
 function truncate_alerts()
@@ -1254,8 +1323,7 @@ function get_primary_menu()
   else
     $msg .= '<li><a href="dashboard.php?'.$tokenname.'='.$tokenid.'">Dashboard</a></li>';
 
-  if (substr($script, 0,2) == "db" || substr($script, 0,5) == "proxy" || 
-      substr($script,0, strlen('whitelist')) == "whitelist" || $script =="alert_view.php")
+  if (substr($script, 0,2) == "db" || substr($script, 0,5) == "proxy" || substr($script,0, strlen('whitelist')) == "whitelist" || $script =="alert_view.php")
     $msg .= '<li class="active"><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';
   else
     $msg .= '<li><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';
@@ -1313,7 +1381,7 @@ function get_top_db_menu()
   $msg = '<div id="secondary-menu"><ul class="menu">';
 
   if ((substr($script, 0,2) == "db" && $script != "db_add.php") || $script == "rawalert_list.php" || $script == "proxy_edit.php" ||
-      substr($script,0, strlen('whitelist')) == "whitelist" || $script == "alert_view.php")
+      $script == "proxy_delete.php" ||  substr($script,0, strlen('whitelist')) == "whitelist" || $script == "alert_view.php")
     $msg .= '<li class="active"><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';
   else
     $msg .= '<li><a href="db_list.php?'.$tokenname.'='.$tokenid.'">Databases</a></li>';

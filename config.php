@@ -4,7 +4,7 @@
 #$demo_version = 1;
 
 # greensql version
-$version = "1.2.2";
+$version = "1.3.0";
 
 # Database Type, allowed values "mysql" and "pgsql"
 $db_type = "mysql";

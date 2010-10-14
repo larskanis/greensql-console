@@ -50,29 +50,31 @@ function display_table($header, $rows)
     $out .= '</th>';
   }
   $out .= "</tr>\n";
-  foreach ($rows as $row)
+
+  if (count($rows)>0) 
   {
-    $out .= '<tr>';
-    foreach ($header as $row2)
+    foreach ($rows as $row)
     {
-      if (isset($row2['size']) && $row2['size'] == 'auto')
+      $out .= '<tr>';
+      foreach ($header as $row2)
       {
-        $out .= '<td style="overflow:hidden;padding-left:4px;" nowrap>';
-      } else {
-        $out .= '<td nowrap>';
+        if (isset($row2['size']) && $row2['size'] == 'auto')
+        {
+          $out .= '<td style="overflow:hidden;padding-left:4px;" nowrap>';
+        } else {
+          $out .= '<td nowrap>';
+        }
+        if (isset($row2['field']))
+        {
+          $out .= $row[$row2['field']].'</td>';
+        } else {
+          # we do not have a field, we have only Title
+          $out .= $row[$row2['title']].'</td>';
+        }
       }
-      if (isset($row2['field']))
-      {
-        $out .= $row[$row2['field']].'</td>';
-      } else {
-        # we do not have a field, we have only Title
-        $out .= $row[$row2['title']].'</td>';
-      }
+      $out .= "</tr>\n";
     }
-    $out .= "</tr>\n";
-  }
-  if (count($rows) == 0)
-  {
+  } else {
     $out .= '<tr><td colspan='.count($header).'>The list is empty.</td></tr>';
   }
   $out .= "</table>";

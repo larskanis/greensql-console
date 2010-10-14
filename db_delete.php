@@ -7,6 +7,9 @@ global $smarty;
 $msg = "";
 $error = "";
 
+$smarty->assign("PrimaryMenu", get_primary_menu());
+$smarty->assign("SecondaryMenu", get_top_db_menu());
+
 $db_id = 0;
 if (isset($_REQUEST['db_id']))
 {
@@ -27,10 +30,7 @@ if (isset($_POST['delete']))
         $error = delete_database($db_id);
     }
 
-    if (!$error)
-    {
-        $msg = "Database has been successfully deleted.<br/>You need to restart greensql firewall for the changes take effect.";
-    } else {
+    if ($error) {
         $msg = "<font color='red'>$error</font>";
     }
     $_SESSION['msg'] = $msg;
