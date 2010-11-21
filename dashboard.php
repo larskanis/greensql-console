@@ -44,9 +44,9 @@ if ($num_alerts >= 7)
   global $tokenid;
   $more_alerts = 'rawalert_list.php?'.$tokenname.'='.$tokenid;
   if (isset($_REQUEST['sort']))
-    $more_alerts .= '&sort='.$_REQUEST['sort'];
+    $more_alerts .= '&sort='.htmlspecialchars($_REQUEST['sort']);
   if (isset($_REQUEST['order']))
-    $more_alerts .= '&order='.$_REQUEST['order'];
+    $more_alerts .= '&order='.htmlspecialchars($_REQUEST['order']);
   $smarty->assign("more_alerts", $more_alerts);
 }
 $news = get_news();
