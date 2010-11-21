@@ -46,7 +46,7 @@ if (isset($_POST['submit']))
     {
         $error .= "Proxy Name is empty.<br/>\n";
     }
-    else if (!ereg("^[a-zA-Z0-9_\.\ ]+$", $proxy['proxyname']))
+    else if (!preg_match("/^[a-zA-Z0-9_\.\ ]+$/", $proxy['proxyname']))
     {
         $error .= "Proxy Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', ' ' and '.'.<br/>\n";
     }
@@ -55,7 +55,7 @@ if (isset($_POST['submit']))
     {
         $error .= "Backend ServerName is empty.<br/>\n";
     }
-    else if (!ereg("^[a-zA-Z0-9_\.]+$", $proxy['backend_server']))
+    else if (!preg_match("/^[a-zA-Z0-9_\.]+$/", $proxy['backend_server']))
     {
         $error .= "Backend Server Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_' and '.'.<br/>\n";
     }

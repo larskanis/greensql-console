@@ -90,7 +90,7 @@ if (isset($_POST['submit']))
     if (strlen($db['db_name']) == 0)
     {
        $error .= "Database name can not be empty.<br/>\n";
-    } else if (!ereg("^[a-zA-Z0-9_\ -]+$",$db['db_name']))
+    } else if (!preg_match("/^[a-zA-Z0-9_\ -]+$/",$db['db_name']))
     {
         $error .= "Database Name is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
     }

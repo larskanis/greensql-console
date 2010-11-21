@@ -21,24 +21,24 @@ if (isset($_POST['submit']))
 	{
 		$error .= "User can not be empty.<br/>\n";
 	} 
-	else if (!ereg("^[a-zA-Z0-9_]+$", $user['name']))
-			{
-			$error .= "Username is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
-			}
+	else if (!preg_match("/^[a-zA-Z0-9_]+$/", $user['name']))
+        {
+            $error .= "Username is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
+        }
 	if (strlen($user['email']) == 0)
 	{
 		$error .= "Email can not be empty.<br/>\n";
 	} 
-	else if (!ereg("^[a-zA-Z0-9_\-\@\.]+$", $user['email']))
-			{
-				$error .= "Email address is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', '.' and '@'.<br/>\n";
-			}
+	else if (!preg_match("/^[a-zA-Z0-9_\-\@\.]+$/", $user['email']))
+        {
+            $error .= "Email address is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', '.' and '@'.<br/>\n";
+        }
 	$pass = trim(htmlspecialchars($_POST['pass']));
 	$pass2 = trim(htmlspecialchars($_POST['pass2']));
 	if (strlen($pass) == 0)
 	{
 		$error .= "Password can not be empty.<br/>\n";
-	} else if (!ereg("^[a-zA-Z0-9_]+$",$pass))
+	} else if (!preg_match("/^[a-zA-Z0-9_]+$/",$pass))
 			{
 				$error .= "Password is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
 			}

@@ -23,14 +23,14 @@ if (isset($_POST['submit']))
     if (strlen($user['name']) == 0)
     {
         $error .= "User can not be empty.<br/>\n";
-    } else if (!ereg("^[a-zA-Z0-9_]+$", $user['name']))
+    } else if (!preg_match("/^[a-zA-Z0-9_]+$/", $user['name']))
     {
         $error .= "Username is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
     }
     if (strlen($user['email']) == 0)
     {
         $error .= "Email can not be empty.<br/>\n";
-    } else if (!ereg("^[a-zA-Z0-9\-\@\.]+$", $user['email']))
+    } else if (!preg_match("/^[a-zA-Z0-9\-\@\.]+$/", $user['email']))
     {
         $error .= "Email address is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9, '_', '.' and '@'.<br/>\n";
     }
@@ -39,7 +39,7 @@ if (isset($_POST['submit']))
     if ($user['pwd'] != $oldpass)
     {
         $error .= "Old password is wrong. Please retype.<br/>\n";
-    } else if (!ereg("^[a-zA-Z0-9_]+$",$_POST['oldpass']))
+    } else if (!preg_match("/^[a-zA-Z0-9_]+$/",$_POST['oldpass']))
     {
         $error .= "Old password is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
     }
@@ -49,7 +49,7 @@ if (isset($_POST['submit']))
     if (strlen($pass) == 0)
     {
         $error .= "New password can not be empty.<br/>\n";
-    } else if (!ereg("^[a-zA-Z0-9_]+$",$pass))
+    } else if (!preg_match("/^[a-zA-Z0-9_]+$/",$pass))
     {
         $error .= "New password is invalid. It contains illegal characters. Valid characters are a-z, A-Z, 0-9 and '_'.<br/>\n";
     }
